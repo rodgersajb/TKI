@@ -12,7 +12,7 @@ export default async function SubmitScore() {
   await connect();
   // check for authentication
   const { isAuthenticated, getUser } = getKindeServerSession();
-  const isLoggedIn = await isAuthenticated();
+  
   const user = await getUser();
 
   // check if user is logged in and in database
