@@ -1,17 +1,23 @@
 import mongoose from "mongoose";
-import { type } from "os";
 
 const playerSchema = new mongoose.Schema({
-    firstName: {
-        type: String,
-        required: true
-    },
-    lastName: {
-        type: String,
-        required: true
-    },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  familyName: String,
+  givenName: String,
+  picture: String,
+  username: String,
+  phoneNumber: String,
+  kindeId: {
+    type: String,
+    unique: true,
+  },
 });
 
-const Players = mongoose.models.Players || mongoose.model("Players", playerSchema);
+const Player =
+  mongoose.models.Player || mongoose.model("Player", playerSchema);
 
-export default Players;
+export default Player;
