@@ -41,7 +41,7 @@ export default function Navbar() {
       <nav
         className={` absolute top-10 left-0 z-20 ${
           isOpen ? "block" : "hidden"
-        } w-full h-svh`}
+        }  w-full h-svh`}
       >
         <ul className="flex flex-col gap-10 pt-20 z-20 text-sm bg-slate-400 h-svh w-full">
           {routes.map(({ label, href }) => (

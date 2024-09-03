@@ -1,4 +1,10 @@
-import Link from "next/link";
+import { FaUserCircle } from "react-icons/fa";
+
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 import {
   LoginLink,
@@ -12,11 +18,6 @@ import Player from "../schema/player";
 
 import { Button } from "@/components/ui/button";
 import Navbar from "./navbar";
-
-
-
-
-
 
 export default async function Header() {
   // connect to db
@@ -47,14 +48,27 @@ export default async function Header() {
       <div className="">
         <Navbar />
       </div>
-     
-      <div className="flex gap-x-3 text-sm pr-3">
+      <h1>The Kobe</h1>
+
+      <div className="flex items-center pt-1  text-sm pr-3">
         {isLoggedIn ? (
           <>
+          <HoverCard>
+            <HoverCardTrigger>
+              <FaUserCircle className="cursor-pointer"/>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <span>Logged in as {user?.given_name}</span>
+              <Button>
+                <LogoutLink>Logout</LogoutLink>
+              </Button>
+            </HoverCardContent>
+          </HoverCard>
+            {/* <FaUserCircle />
             <span>Logged in as {user?.given_name}</span>
             <Button>
               <LogoutLink>Logout</LogoutLink>
-            </Button>
+            </Button> */}
           </>
         ) : (
           <>
