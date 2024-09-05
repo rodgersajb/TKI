@@ -6,6 +6,8 @@ import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
 
+
+
 const routes = [
   {
     label: "Home",
@@ -23,6 +25,14 @@ const routes = [
     label: "Past Results",
     href: "/past-results",
   },
+  {
+    label: "The Field",
+    href: "/players",
+  },
+  {
+    label: "Begin Kobe",
+    href: "/start-kobe",
+  }
 ];
 
 export default function Navbar() {
