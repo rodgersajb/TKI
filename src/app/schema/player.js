@@ -15,9 +15,24 @@ const playerSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
+  handicap: {
+    type: Number,
+    required: true,
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  isChampion: {
+    type: Boolean,
+    default: false,
+  },
+  bio: {
+    type: String,
+    default: "",
+  },
 });
 
-const Player =
-  mongoose.models.Player || mongoose.model("Player", playerSchema);
+const Player = mongoose.models.Player || mongoose.model("Player", playerSchema);
 
 export default Player;

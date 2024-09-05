@@ -8,23 +8,40 @@ const scoreSchema = new mongoose.Schema({
     required: true,
   },
   course: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "GolfCourse",
     required: true,
   },
-  data: {
+  date: {
     type: Date,
     default: Date.now,
   },
-  score: {
-    type: Number,
-    required: true,
+  scores: [
+    {
+      holeNumber: {
+        type: Number,
+        required: true,
+      },
+      strokes: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
+  roundComplete: {
+    type: Boolean,
+    default: false,
   },
   notes: {
     type: String,
     default: "",
   },
+  submitted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const Scores = mongoose.models.Scores || mongoose.model("Scores", scoreSchema);
+const Score = mongoose.models.Score || mongoose.model("Score", scoreSchema);
 
-export default Scores;
+export default Score;

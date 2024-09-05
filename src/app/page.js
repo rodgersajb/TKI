@@ -9,7 +9,7 @@ export default function Home() {
         <h1 className="">Welcome Billies, to the 2024 Kobe Invitational</h1>
         
       </div>
-      <figure className="relative  flex justify-end">
+      <figure className="relative flex justify-end">
         <Image
           src="/img/smitty.jpg"
           alt="Kobe Bryant"
