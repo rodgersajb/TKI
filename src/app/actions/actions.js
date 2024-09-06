@@ -4,7 +4,9 @@ import PastResults from "../schema/past-results";
 import Player from "../schema/player";
 import Score from "../schema/score";
 
+
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import Toast from "../components/toast";
 
 export const addScore = async (formData) => {
   // server session to be used for authentication
@@ -16,8 +18,10 @@ export const addScore = async (formData) => {
 
   // destructure score data and grab all of the input values
 
-  const playerPermission = await getPermission("add:score");
 
+  // check if user has permission to submit a score
+  const playerPermission = await getPermission("add:score");
+  // if the user has permission to submit a score
   if (playerPermission?.isGranted) {
     const { course, score, notes } = Object.fromEntries(formData.entries());
     console.log(course, score, notes, "course, score, notes");
@@ -38,10 +42,11 @@ export const addScore = async (formData) => {
       notes: notes,
       submitted: true,
     });
-
+    console.log("SUBMITTED")
     await scoreSubmission.save();
   } else {
-    console.log("You do not have permission to submit a score");
+    console.log("NO PERMISSION BAD")
+    
   }
 };
 

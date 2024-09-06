@@ -4,16 +4,22 @@ import { addScore } from "../actions/actions";
 import { useRef } from "react";
 import ScoreButton from "./scoreButton";
 
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+
 export default function ScoreForm({ courseNames }) {
- 
+
+
+  
   const ref = useRef(null);
 
   return (
     <form
       ref={ref}
+      
       action={async (formData) => {
         ref.current?.reset();
         // input validation
+
         await addScore(formData);
       }}
       className=""

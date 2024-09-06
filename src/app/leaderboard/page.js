@@ -18,18 +18,22 @@ export default async function Leaderboard() {
     redirect("/api/auth/login");
   }
 
+  let ranking = 0
+
   const results = await Scores.find().populate("player").sort({ score: 1 });
   console.log(results, "results");
 
   return (
-    <main className="min-h-svh">
+    <main className="min-h-svh w-full">
       <Header />
       {isAuthenticated && (
-        <>
+        <div className="w-[95%] m-auto flex flex-col">
           <h1>Leader Board</h1>
-          <ul>
-            {results.map((result) => (
-              <li key={result._id}>
+
+          <ul className="">
+            {results.map((result, index) => (
+              <li className="flex w-full items-center gap-10" key={result._id}>
+                <span>#{index + 1}</span>
                 <h2>{result.player.givenName}</h2>
 
                 <p className="text-pink">{result.score}</p>
@@ -37,7 +41,7 @@ export default async function Leaderboard() {
               </li>
             ))}
           </ul>
-        </>
+        </div>
       )}
     </main>
   );
