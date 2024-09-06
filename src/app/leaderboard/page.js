@@ -19,6 +19,7 @@ export default async function Leaderboard() {
   }
 
   const results = await Scores.find().populate("player").sort({ score: 1 });
+  console.log(results, "results");
 
   return (
     <main className="min-h-svh">
@@ -31,7 +32,7 @@ export default async function Leaderboard() {
               <li key={result._id}>
                 <h2>{result.player.givenName}</h2>
 
-                <p>{result.score}</p>
+                <p className="text-pink">{result.score}</p>
                 <p>{result.notes}</p>
               </li>
             ))}

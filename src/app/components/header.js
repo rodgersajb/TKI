@@ -27,11 +27,8 @@ export default async function Header() {
   const { isAuthenticated, getUser } = getKindeServerSession();
   const isLoggedIn = await isAuthenticated();
 
-  if (!isLoggedIn) {
-    redirect("api/auth/login");
-  }
-
   const user = await getUser();
+  console.log(user)
 
   // check if user is logged in and in database
   if (isLoggedIn) {

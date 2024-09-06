@@ -8,7 +8,7 @@ const scoreSchema = new mongoose.Schema({
     required: true,
   },
   course: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "GolfCourse",
     required: true,
   },
@@ -16,18 +16,21 @@ const scoreSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  scores: [
-    {
-      holeNumber: {
-        type: Number,
-        required: true,
-      },
-      strokes: {
-        type: Number,
-        required: true,
-      },
-    },
-  ],
+  score: {
+    type: Number,
+    required: true
+  },
+  // score: [
+  //   {
+  //     holeNumber: {
+  //       type: Number,
+  //     },
+  //     strokes: {
+  //       type: Number,
+  //       required: true,
+  //     },
+  //   },
+  // ],
   roundComplete: {
     type: Boolean,
     default: false,
