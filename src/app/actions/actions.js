@@ -6,7 +6,6 @@ import Score from "../schema/score";
 
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import Toast from "../components/toast";
 
 export const addScore = async (formData) => {
   // server session to be used for authentication
@@ -59,3 +58,7 @@ export const getPastResults = async () => {
   const pastResults = await PastResults.find(rawFormData);
   return pastResults;
 };
+
+export const setTeams = async (formData) => {
+  
+}
