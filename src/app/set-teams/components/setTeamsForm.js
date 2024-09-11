@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import useMultiStep from "@/app/hooks/multiStepHook";
+import connect from "@/app/lib/mongoose";
 
 export default function SetTeamsForm({ players }) {
 
@@ -47,11 +48,28 @@ export default function SetTeamsForm({ players }) {
   );
   return (
     <main className="relative">
-      <form>
+      <form
+      action={async (formData) => {
+        
+
+        // const teams = await setTeams(formData);
+        // if (teams?.error) {
+        //   toast.error(teams.error);
+        // } else {
+        //   toast.success("Teams submitted");
+        // }
+        // // input validation
+
+        // await setTeams(formData);
+      }
+      }
+      >
         {remainingPlayers.map((player) => (
           <button
             key={player._id}
             type="button"
+            name="teams"
+            id="teams"
             className={`px-4 py-2 border ${
               selectedPlayers.some((p) => p._id === player._id)
                 ? "bg-green-500"
@@ -63,6 +81,7 @@ export default function SetTeamsForm({ players }) {
             {player.givenName} {player.familyName}
           </button>
         ))}
+        
         <div className="absolute top-1 right-1 text-purple-700">
           Step {currentStepIndex + 1} / {players.length / 2}
         </div>
@@ -72,7 +91,11 @@ export default function SetTeamsForm({ players }) {
             {/* if we are at the beginning of the steps we will go no further */}
             {currentStepIndex === 0 ? "" : "Back"}
           </button>
-          <button onClick={handleSubmitTeam}>
+          <button
+          type="submit"
+          value={selectedPlayers}
+          id="selectedPlayers"
+          onClick={handleSubmitTeam}>
             {/* checking if the currentIndex is equal to the length of the players array that is divided in to two to show teams - 1 length of the array. If there is next step*/}
             {currentStepIndex === players.length / 2 - 1
               ? "Finalize Teams"

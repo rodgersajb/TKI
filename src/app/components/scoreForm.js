@@ -3,6 +3,8 @@
 import { addScore } from "../actions/actions";
 import { useRef } from "react";
 import ScoreButton from "./scoreButton";
+import { addScore } from "../actions/actions";
+import toast from "react-hot-toast";
 
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
@@ -18,6 +20,13 @@ export default function ScoreForm({ courseNames }) {
       
       action={async (formData) => {
         ref.current?.reset();
+
+        const score = await addScore(formData);
+        if (score?.error) {
+          toast.error(score.error);
+        } else {
+          toast.success("Score submitted");
+        }
         // input validation
 
         await addScore(formData);

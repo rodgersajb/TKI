@@ -2,23 +2,19 @@ import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
 const scoreSchema = new mongoose.Schema({
-  player: {
+  team: {
     type: Schema.Types.ObjectId,
-    ref: "Player",
+    ref: "Team",
     required: true,
   },
   course: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: "GolfCourse",
     required: true,
   },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-  score: {
+  netScore: {
     type: Number,
-    required: true
+    default: 0,
   },
   // score: [
   //   {
