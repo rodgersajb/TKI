@@ -31,13 +31,35 @@ export default function SetTeamsForm({ players }) {
   console.log(selectedPlayers, 'selected players');
   console.log(submittedTeams,  'teams');
   // Handle form submission
-  const handleSubmitTeam = (e) => {
+  const handleSubmitTeam = async (e) => {
     e.preventDefault();
     if (selectedPlayers.length === 2) {
       // Save the team and reset selected players for the next step
-      setSubmittedTeams((prev) => [...prev, selectedPlayers]);
-      setSelectedPlayers([]);
-      nextStep(); // Move to next step
+      // setSubmittedTeams((prev) => [...prev, selectedPlayers]);
+      // setSelectedPlayers([]);
+      // nextStep(); // Move to next step
+      try {
+        const response = await fetch("/api/submit-teams", {
+          method: "POST",
+          body: JSON.stringify({ selectedPlayers }), // Send as an object
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(data.message || "Something went wrong");
+        }
+
+        const data = await response.json();
+        console.log(data, "server response");
+
+        setSubmittedTeams((prev) => [...prev, selectedPlayers]);
+        setSelectedPlayers([]);
+        nextStep(); // Move to next step
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

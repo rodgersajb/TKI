@@ -50,7 +50,7 @@ export default async function Header() {
   return (
     <header className="flex items-center justify-between w-full">
       <div className="">
-        <Navbar />
+       
       </div>
       <h1>The Kobe</h1>
 

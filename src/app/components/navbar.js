@@ -6,8 +6,6 @@ import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
 
-
-
 const routes = [
   {
     label: "Home",
@@ -32,30 +30,35 @@ const routes = [
   {
     label: "Begin Kobe",
     href: "/start-kobe",
-  }
+  },
 ];
 
 export default function Navbar() {
-    const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-    
   return (
     <>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        id="menu-btn"
-        className="flex sm:hidden p-2 z-50"
-      >
-        {isOpen ? <IoClose /> : <GiHamburgerMenu />}
-      </button>
+      <div className="flex justify-start z-50 p-1">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          id="menu-btn"
+          className={`z-50 ${isOpen ? "text-kobeWhite" : "text-kobePurple"}`}
+        >
+          {isOpen ? <IoClose /> : <GiHamburgerMenu />}
+        </button>
+        
+      </div>
       <nav
-        className={` absolute top-10 left-0 z-20 ${
-          isOpen ? "block" : "hidden"
-        }  w-full h-svh`}
+        className={` fixed top-0 left-0 h-svh w-full bg-gray-800 text-white transform ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out z-40`}
       >
-        <ul className="flex flex-col gap-10 pt-20 z-20 text-sm bg-slate-400 h-svh w-full">
+        <header>
+          
+        </header>
+        <ul className="flex flex-col items-start justify-center h-full space-y-6 bg-kobePurple">
           {routes.map(({ label, href }) => (
-            <li key={href}>
+            <li className="text-kobeWhite" key={href}>
               <Link href={href}>{label}</Link>
             </li>
           ))}
