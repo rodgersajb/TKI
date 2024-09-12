@@ -1,6 +1,5 @@
 "use client";
 
-import { addScore } from "../actions/actions";
 import { useRef } from "react";
 import ScoreButton from "./scoreButton";
 import { addScore } from "../actions/actions";
@@ -25,7 +24,7 @@ export default function ScoreForm({ courseNames }) {
         if (score?.error) {
           toast.error(score.error);
         } else {
-          toast.success("Score submitted");
+          console.log("something")
         }
         // input validation
 
@@ -36,11 +35,11 @@ export default function ScoreForm({ courseNames }) {
       <label htmlFor="course">Course</label>
       <select className="text-purple-500" name="course" id="course" required>
         <option>---Select a course, Bills</option>
-        {courseNames.map((courseName) => (
+        {/* {courseNames.map((courseName) => (
           <option key={courseName} value={courseName}>
             {courseName}
           </option>
-        ))}
+        ))} */}
       </select>
       {/* <input
           className="text-purple-500"

@@ -12,21 +12,28 @@ const scoreSchema = new mongoose.Schema({
     ref: "GolfCourse",
     required: true,
   },
+  holeScores: [
+    {
+      player: {
+        type: Schema.Types.ObjectId,
+        ref: "Player",
+        required: true,
+      },
+      holeNumber: {
+        type: Number,
+        required: true,
+      },
+      strokes: {
+        type: Number,
+        required: true,
+      },
+    },
+    
+  ],
   netScore: {
     type: Number,
     default: 0,
-  },
-  // score: [
-  //   {
-  //     holeNumber: {
-  //       type: Number,
-  //     },
-  //     strokes: {
-  //       type: Number,
-  //       required: true,
-  //     },
-  //   },
-  // ],
+  }, 
   roundComplete: {
     type: Boolean,
     default: false,

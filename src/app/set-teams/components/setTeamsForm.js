@@ -94,11 +94,11 @@ export default function SetTeamsForm({ players }) {
             id="teams"
             className={`px-4 py-2 border ${
               selectedPlayers.some((p) => p._id === player._id)
-                ? "bg-green-500"
+                ? "bg-kobePurple text-kobeWhite"
                 : "bg-gray-200"
             }`}
             onClick={() => handlePlayerSelect(player)}
-            disabled={selectedPlayers.includes(player)}
+            // disabled={selectedPlayers.includes(player)}
           >
             {player.givenName} {player.familyName}
           </button>

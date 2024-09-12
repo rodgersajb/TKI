@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
+
 const teamSchema = new mongoose.Schema({
+
+
   players: [
     {
       type: Schema.Types.ObjectId,

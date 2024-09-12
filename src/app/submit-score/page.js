@@ -6,18 +6,26 @@ import { redirect } from "next/navigation";
 import connect from "../lib/mongoose";
 import ScoreForm from "../components/scoreForm";
 import GolfCourse from "../schema/golfCourseSchema";
+import Team from "../schema/teamSchema";
 
 
 
-export default async function SubmitScore() {
+export default async function SubmitScore({ params }) {
+  console.log(params, "params");
+  const { courseId, teamId } = params;
   //connect to db
   await connect();
   // check for authentication
-  const { isAuthenticated } = getKindeServerSession();
-  const findCourses = await GolfCourse.find().lean(); 
+  const { isAuthenticated } = await getKindeServerSession();
+
+  const course = await GolfCourse.findById().populate("holes");
+
+  const team = await Team.findById(teamId).populate("players");
+
+  console.log(course, team, "course");
   
-  const courseNames = findCourses.map((course) => course.name);
-  console.log(courseNames, 'courseNames')
+
+
   // const convertIdToString = findCourses.map((course) => ({
   //   ...course,
   //   _id: course._id.toString(), // Convert ObjectId to string
@@ -38,7 +46,7 @@ export default async function SubmitScore() {
     <main className="text-center">
       <Header />
       <h1 className="text-xl">Submit Score</h1>
-      <ScoreForm courseNames={courseNames}/>
+      <ScoreForm />
     </main>
   );
 }

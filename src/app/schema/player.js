@@ -17,7 +17,7 @@ const playerSchema = new mongoose.Schema({
   },
   handicap: {
     type: Number,
-    fallback: 0,
+    fallback: 14,
     required: true,
   },
   isAdmin: {

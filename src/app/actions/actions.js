@@ -4,6 +4,7 @@ import PastResults from "../schema/past-results";
 import Player from "../schema/player";
 import Score from "../schema/score";
 
+
 import { revalidatePath } from "next/cache";
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";

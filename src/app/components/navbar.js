@@ -29,7 +29,7 @@ const routes = [
   },
   {
     label: "Begin Kobe",
-    href: "/start-kobe",
+    href: "/set-teams",
   },
 ];
 

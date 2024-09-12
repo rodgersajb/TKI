@@ -1,6 +1,7 @@
 import Header from "../components/header";
 import connect from "../lib/mongoose";
 import Scores from "../schema/score";
+import Team from "../schema/teamSchema";
 
 import { redirect } from "next/navigation";
 
@@ -12,13 +13,15 @@ export default async function Leaderboard() {
   // connect to db
   await connect();
   // server session to be used for authentication
+  const teams = await Team.find();
+  console.log(teams.teamId, "LEADERBOARD");
   const { isAuthenticated, getUser } = getKindeServerSession();
 
   if (!(await isAuthenticated())) {
     redirect("/api/auth/login");
   }
 
-  let ranking = 0
+  let ranking = 0;
 
   const results = await Scores.find().populate("player").sort({ score: 1 });
   console.log(results, "results");
