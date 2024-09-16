@@ -4,25 +4,21 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
 import connect from "../lib/mongoose";
-import ScoreForm from "../components/scoreForm";
+// import ScoreForm from "../components/scoreForm";
 import GolfCourse from "../schema/golfCourseSchema";
 import Team from "../schema/teamSchema";
+import TestForm from "./components/testForm";
 
 
 
 export default async function SubmitScore({ params }) {
-  console.log(params, "params");
-  const { courseId, teamId } = params;
-  //connect to db
-  await connect();
+  const res = await fetch("http://localhost:3000/api/courses");
+  const data = await res.json();
+  console.log(data, "data");
   // check for authentication
   const { isAuthenticated } = await getKindeServerSession();
 
-  const course = await GolfCourse.findById().populate("holes");
-
-  const team = await Team.findById(teamId).populate("players");
-
-  console.log(course, team, "course");
+ 
   
 
 
@@ -46,7 +42,8 @@ export default async function SubmitScore({ params }) {
     <main className="text-center">
       <Header />
       <h1 className="text-xl">Submit Score</h1>
-      <ScoreForm />
+      {/* <ScoreForm /> */}
+      <TestForm data={data}  />
     </main>
   );
 }

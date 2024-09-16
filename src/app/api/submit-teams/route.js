@@ -1,5 +1,6 @@
 import Team from "@/app/schema/teamSchema";
 import connect from "@/app/lib/mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 
 export async function POST(req) {
@@ -21,12 +22,13 @@ export async function POST(req) {
 
     // Create a new team in the database
     const newTeam = new Team({
-      
+      teamId: uuidv4(),
       players: selectedPlayers.map((player) => player._id),
       isChampionTeam: false,
     });
-    await newTeam.save();
+
     console.log(newTeam, "new team");
+    await newTeam.save();
 
     // Return success response
     return new Response(
