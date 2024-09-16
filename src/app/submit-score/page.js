@@ -14,7 +14,7 @@ import TestForm from "./components/testForm";
 export default async function SubmitScore({ params }) {
   const res = await fetch("http://localhost:3000/api/courses");
   const data = await res.json();
-  console.log(data, "data");
+  console.log(data[0], data[1], "data");
   // check for authentication
   const { isAuthenticated } = await getKindeServerSession();
 
@@ -43,7 +43,7 @@ export default async function SubmitScore({ params }) {
       <Header />
       <h1 className="text-xl">Submit Score</h1>
       {/* <ScoreForm /> */}
-      <TestForm data={data}  />
+      <TestForm quarryGolf={data[1]} sixFootGolf={data[0]}  />
     </main>
   );
 }
