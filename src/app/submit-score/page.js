@@ -11,7 +11,7 @@ import TestForm from "./components/testForm";
 
 
 
-export default async function SubmitScore({ params }) {
+export default async function SubmitScore() {
   const res = await fetch("http://localhost:3000/api/courses");
   const data = await res.json();
   console.log(data[0], data[1], "data");
