@@ -1,39 +1,25 @@
 import mongoose from "mongoose";
-import { Schema } from "mongoose";
+
 
 const scoreSchema = new mongoose.Schema({
-  team: {
-    type: Schema.Types.ObjectId,
-    ref: "Team",
+  player: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Player",
     required: true,
   },
   course: {
-    type: Schema.Types.ObjectId,
-    ref: "GolfCourse",
+    name: {
+      type: String,
+      required: true,
+    },
+    _id: { type: mongoose.Schema.Types.ObjectId, ref: "GolfCourse" },
+  },
+
+  totalScore: {
+    type: Number,
     required: true,
   },
-  holeScores: [
-    {
-      player: {
-        type: Schema.Types.ObjectId,
-        ref: "Player",
-        required: true,
-      },
-      holeNumber: {
-        type: Number,
-        required: true,
-      },
-      strokes: {
-        type: Number,
-        required: true,
-      },
-    },
-    
-  ],
-  netScore: {
-    type: Number,
-    default: 0,
-  }, 
+
   roundComplete: {
     type: Boolean,
     default: false,

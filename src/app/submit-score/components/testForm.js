@@ -10,17 +10,51 @@ import "swiper/css/pagination";
 
 import toast from "react-hot-toast";
 
-export default function TestForm({ sixFootGolf, quarryGolf }) {
+import { addScore } from "@/app/actions/actions";
+import SubmitButton from "./submitButton";
+
+export default function TestForm({ sixFootGolf, quarryGolf, user, kindeId }) {
   // useState to keep track of score
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(
+    sixFootGolf.holes.reduce((acc, hole) => {
+      acc[hole.number] = "";
+      return acc;
+    }, {})
+  );
+
+  const [totalScore, setTotalScore] = useState(0);
 
   const swiperRef = useRef(null);
+  const ref = useRef(null);
 
   // Handlers for buttons
-  const handleNextSlide = () => {
+  const handleNextSlide = async () => {
     if (swiperRef.current && swiperRef.current.swiper) {
       swiperRef.current.swiper.slideNext();
       console.log(swiperRef.current.swiper, "swiperRef");
+
+      const holeNumber = swiperRef.current.swiper.activeIndex + 1; // Get the current hole number
+      const holeScore = score[holeNumber];
+
+      // Fetch to update scores
+      // const res = await fetch("http://localhost:3000/api/hole-scoring", {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     player: kindeId,
+      //     course: sixFootGolf.name,
+      //     holeNumber,
+      //     strokes: holeScore,
+      //   }),
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // });
+
+      // if (res.ok) {
+      //   toast.success("Score updated successfully!");
+      // } else {
+      //   toast.error("Failed to update score.");
+      // }
     }
   };
 
@@ -33,35 +67,38 @@ export default function TestForm({ sixFootGolf, quarryGolf }) {
 
   // function to handle score input
   const handleScoreChange = (holeNumber, value) => {
-    setScore({
-      ...score,
-      [holeNumber]: value,
-    });
+    setScore((prev) => ({ ...prev, [holeNumber]: value }));
     console.log(score, "score");
   };
-  // function to handle score submission
-  const handleSubmit = async () => {
-    // fetch to submit scores
-    const res = await fetch("http://localhost:3000/api/scores", {
-      method: "POST",
-      body: JSON.stringify({
-        course: sixFootGolf.name,
-        score,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (res.ok) {
-      toast.success("Score submitted successfully!");
-    } else {
-      toast.error("Failed to submit score.");
-    }
-  };
+  // calculate total score by converting object values to an array and then reducing the array to a single value
+  const finalScore = Object.values(score).reduce(
+    (acc, score) => acc + (parseInt(score) || 0),
+    0
+  );
+  console.log(finalScore, "finalScore");
 
   return (
     <>
-      <form className="flex flex-col">
+      <form
+        ref={ref}
+        action={async (formData) => {
+          ref.current?.reset();
+
+          formData.append("totalScore", finalScore);
+
+          const result = await addScore(formData);
+          if (result?.error) {
+            toast.error(result.error);
+          } else {
+            console.log("something");
+          }
+          // input validation
+
+          await addScore(formData);
+        }}
+        className="flex flex-col"
+      >
+        <input type="hidden" name="course" value={sixFootGolf.name} />
         <h2>{sixFootGolf.name}</h2>
         <Swiper
           ref={swiperRef}
@@ -79,21 +116,25 @@ export default function TestForm({ sixFootGolf, quarryGolf }) {
                   <p>Par: {hole.par}</p>
                   <p>Handicap: {hole.handicap}</p>
                   <p>Yardage: {hole.yardage}</p>
-                  <label htmlFor="score">Score:</label>
-                  <input
-                    type="number"
-                    name="score"
-                    required
-                    placeholder={hole.par}
-                    defaultValue={hole.par}
-                    value={score[hole.number]}
-                    onChange={(e) => handleScoreChange(e.target.value)}
-                  />
+                  <div className="flex flex-col w-1/2 items-center justify-center m-auto">
+                    <label htmlFor="score">Score:</label>
+                    <input
+                      type="number"
+                      id={`score-${hole.number}`}
+                      name="score"
+                      defaultValue={score[hole.number]}
+                      onChange={(e) =>
+                        handleScoreChange(hole.number, e.target.value)
+                      }
+                    />
+                  </div>
                 </div>
               </SwiperSlide>
             );
           })}
         </Swiper>
+        <label htmlFor="totalScore">{`Score: ${finalScore}`}</label>
+        <input type="number" name="totalScore" value={finalScore} required />
         <div className="flex justify-between px-1">
           <button
             className="bg-kobePurple text-kobeWhite py-1 px-2 rounded-lg"
@@ -110,7 +151,19 @@ export default function TestForm({ sixFootGolf, quarryGolf }) {
             Next Hole
           </button>
         </div>
-        <button onClick={handleSubmit}>Submit score</button>
+        <div className="flex justify-center items-center">
+          {/* <button
+            className="bg-kobeYellow text-kobePurple font-bold mt-6 py-2 px-8 rounded-sm"
+            onClick={handleSubmit}
+          >
+            Submit score
+          </button> */}
+          <SubmitButton />
+        </div>
+        <label htmlFor="notes" name="notes" value="notes">
+          Notes:
+        </label>
+        <textarea name="notes" id="notes" value="notes"></textarea>
       </form>
     </>
   );

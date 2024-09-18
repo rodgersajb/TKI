@@ -1,39 +1,40 @@
 import connect from "@/app/lib/mongoose";
 import Team from "@/app/schema/teamSchema";
 import Score from "@/app/schema/score";
-import Player from "@/app/schema/playerSchema";
 
-export async function POST(req) {
+
+export async function POST() {
+    await connect()
 
     try {
-        await connect()
+      const { player, course, holeNumber, strokes } = new Request(req).json();
 
-        const { teamId, holeScores } = await req.json();
+      // Find the existing score document or create a new one
+      let score = await Score.findOne({ player, course, roundComplete: false });
 
-        // Find the team and their score
-        const team = await Team.findById(teamId).populate("players");
-        const teamScore = await Score.findOne({ teamId });
+      if (!score) {
+        score = new Score({ player, course, roundComplete: false });
+      }
 
-        // Ensure the team exists
+      // Update the score for the specific hole
+      const holeScoreIndex = score.holeScores.findIndex(
+        (hs) => hs.holeNumber === holeNumber
+      );
 
-        if (!team || !teamScore) {
-            return new Response(
-                JSON.stringify({ error: "Team not found" }),
-                { status: 404 }
-            );
-        }
+      if (holeScoreIndex > -1) {
+        // Update existing score entry
+        score.holeScores[holeScoreIndex].strokes = strokes;
+      } else {
+        // Add new score entry
+        score.holeScores.push({ player, holeNumber, strokes });
+      }
 
-        //update hole scores
-        teamScore.holeScores = holeScores;
+      // Save the score document
+      await score.save();
 
-        await teamScore.save();
-
-        return new Response(
-            JSON.stringify({ message: "Hole scores updated successfully" }),
-            { status: 200 }
-        );
+      res.status(200).json({ message: "Score updated successfully" });
     } catch (error) {
-        console.error("Error updating hole scores:", error);
-        return new Response(JSON.stringify({ error: "Failed to update hole scores" }), { status: 500 });
+      console.error(error);
+      res.status(500).json({ error: "Failed to update score" });
     }
-}
+  } 

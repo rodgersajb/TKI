@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from "uuid";
 const teamSchema = new mongoose.Schema({
   teamId: {
     type: String,
-    default: uuidv4(),
-    unique: true,
+    default: uuidv4,
   },
+
   players: [
     {
       type: Schema.Types.ObjectId,

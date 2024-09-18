@@ -6,7 +6,8 @@ import { v4 as uuidv4 } from "uuid";
 export async function POST(req) {
   try {
     await connect();
-
+    const teamId = uuidv4();
+    console.log(teamId, "teamId");
     // Parse the incoming JSON request
     const data = await req.json();
     const { selectedPlayers } = data;
@@ -22,7 +23,7 @@ export async function POST(req) {
 
     // Create a new team in the database
     const newTeam = new Team({
-      teamId: uuidv4(),
+      teamId: teamId,
       players: selectedPlayers.map((player) => player._id),
       isChampionTeam: false,
     });

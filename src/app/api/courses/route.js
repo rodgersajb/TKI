@@ -9,9 +9,9 @@ export async function GET() {
         await connect();
 
         const courses = await GolfCourse.find().lean();
-        const teams = await Team.find().lean();
+      
 
-        return new Response(JSON.stringify(courses, teams), { status: 200 });
+        return new Response(JSON.stringify(courses), { status: 200 });
 
     } catch (error) {
         console.error("Error getting courses:", error);

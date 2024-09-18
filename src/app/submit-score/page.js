@@ -3,22 +3,31 @@ import Header from "../components/header";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
-import connect from "../lib/mongoose";
-// import ScoreForm from "../components/scoreForm";
-import GolfCourse from "../schema/golfCourseSchema";
-import Team from "../schema/teamSchema";
 import TestForm from "./components/testForm";
+import Player from "../schema/player";
 
 
 
 export default async function SubmitScore() {
   const res = await fetch("http://localhost:3000/api/courses");
   const data = await res.json();
-  console.log(data[0], data[1], "data");
+  console.log(data[0].name, data[1].name, "data");
   // check for authentication
-  const { isAuthenticated } = await getKindeServerSession();
+  const teamResults = await fetch("http://localhost:3000/api/teams");
+  const teamData = await teamResults.json();
+  console.log(teamData, "teamData");
 
+  const getPlayers = teamData.flatMap((team) => team.players);
+  // const players = await Player.find({ _id: { $in: getPlayers } });
+  
  
+  const { isAuthenticated, getUser } =  getKindeServerSession();
+  // get user from kinde session
+  const user = await getUser();
+  // find the user in the database by the email provided and then send off as props
+//  const findUserByEmail = await Player.findOne({ email: user.email }).lean();
+
+//  console.log(findUserByEmail, "findUserByEmail");
   
 
 

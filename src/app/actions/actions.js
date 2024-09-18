@@ -3,11 +3,12 @@
 import PastResults from "../schema/past-results";
 import Player from "../schema/player";
 import Score from "../schema/score";
-
+import GolfCourse from "../schema/golfCourseSchema";
 
 import { revalidatePath } from "next/cache";
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { FaTemperatureLow } from "react-icons/fa";
 
 export const addScore = async (formData) => {
   // server session to be used for authentication
@@ -23,32 +24,56 @@ export const addScore = async (formData) => {
   const playerPermission = await getPermission("add:score");
   // if the user has permission to submit a score
   if (playerPermission?.isGranted) {
-    const { course, score, notes } = Object.fromEntries(formData.entries());
-    console.log(course, score, notes, "course, score, notes");
+    // let score = formData.get("score");
+    
+    // const course = formData.get("course");
+    const totalScore = formData.get("totalScore");
+    const course = formData.get("course");
+
+    console.log(totalScore, course,   "totalScore", "course");
     // Link to logged in player
     const player = await Player.findOne({ email: user.email });
-    console.log(player, "player");
+    if (!player) {
+      return { error: "Player not found" };
+    }
+    const golfCourse = await GolfCourse.findOne({ name: course });
+    if (!golfCourse) {
+      return { error: "Course not found" };
+    }
+    console.log(golfCourse, "golfCourse");
 
-    // Save score to database
-
-    // try catch block to catch any errors and log them
-    //try create a new score submission
-    //catch any errors and log them
     try {
-      const scoreSubmission = await Score.create({
-        player: player._id,
-        course: course,
-        score,
-        roundComplete: true,
-        notes: notes,
-        submitted: true,
-      });
-      console.log("SUBMITTED");
+      // Check if a score submission already exists for the player and course
+      let scoreSubmission = await Score.findOne({ player: player._id, "course._id": golfCourse._id });
+
+      if (scoreSubmission) {
+        // Update existing score submission
+        scoreSubmission.totalScore = totalScore;
+        scoreSubmission.roundComplete = true;
+        scoreSubmission.notes = formData.get("notes");
+        scoreSubmission.submitted = true;
+
+        
+      } else {
+        // Create new score submission
+        scoreSubmission = await Score.create({
+          player: player._id,
+          course: {
+            name: golfCourse.name,
+            _id: golfCourse._id
+          },
+          totalScore: totalScore,
+          roundComplete: true,
+          notes: formData.get("notes"),
+          submitted: true,
+        });
+      }
+
       await scoreSubmission.save();
+      console.log("Score submitted successfully");
     } catch (error) {
-      return {
-        error: error.message,
-      };
+      console.error("Error submitting score:", error.message);
+      return { error: error.message };
     }
 
     revalidatePath("/submit-score");
