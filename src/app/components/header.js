@@ -17,8 +17,7 @@ import connect from "@/app/lib/mongoose";
 import Player from "../schema/player";
 
 import { Button } from "@/components/ui/button";
-import Navbar from "./navbar";
-import { redirect } from "next/navigation";
+
 
 export default async function Header() {
   // connect to db
@@ -49,10 +48,7 @@ export default async function Header() {
 
   return (
     <header className="flex items-center justify-between w-full">
-      <div className="">
-       
-      </div>
-      <h1>The Kobe</h1>
+      
 
       <div className="flex items-center pt-1  text-sm pr-3">
         {isLoggedIn ? (
@@ -68,11 +64,7 @@ export default async function Header() {
                 </Button>
               </HoverCardContent>
             </HoverCard>
-            {/* <FaUserCircle />
-            <span>Logged in as {user?.given_name}</span>
-            <Button>
-              <LogoutLink>Logout</LogoutLink>
-            </Button> */}
+          
           </>
         ) : (
           <>

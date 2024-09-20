@@ -1,4 +1,3 @@
-
 import TestTeam from "@/app/schema/testTeamSchema";
 
 import {
@@ -13,37 +12,30 @@ import {
 } from "@/components/ui/table";
 
 export default async function ListItem({ result, ranking }) {
-    console.log(result, 'result');
-    const teamId = await result.team.teamId;
-    
+  console.log(result, "result");
+  const teamId = await result.team.teamId;
 
-    const team = await TestTeam.findOne({teamId}).populate("players").lean();
-    
+  const team = await TestTeam.findOne({ teamId }).populate("players").lean();
 
   return (
     <>
-      <TableHeader>
-        <TableRow>
-          <TableCell>Rank</TableCell>
-          <TableCell>Players</TableCell>
-          <TableCell>Score</TableCell>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow>
+      
+        <TableBody >
+          <TableRow>
             <TableCell># {ranking}</TableCell>
-            <TableCell>{team.players.map((player) => (
-              <span key={player._id}>
-                {player.givenName} {player.familyName}
-              </span>
-            ))}</TableCell>
+            <TableCell>
+              {team.players.map((player) => (
+                <div className="flex">
+                  <span key={player._id}>
+                    {player.givenName} {player.familyName}
+                  </span>
+                </div>
+              ))}
+            </TableCell>
             <TableCell>{result.totalScore}</TableCell>
-        </TableRow>
-        
-       
-      </TableBody>
-
-
+          </TableRow>
+        </TableBody>
+    
     </>
   );
 }

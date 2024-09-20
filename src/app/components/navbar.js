@@ -6,6 +6,9 @@ import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
 
+import Image from "next/image";
+
+
 const routes = [
   {
     label: "Home",
@@ -37,7 +40,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
+    <main className="flex justify-evenly ">
       <div className="flex justify-start z-50 p-1">
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -53,9 +56,7 @@ export default function Navbar() {
           isOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out z-40`}
       >
-        <header>
-          
-        </header>
+        
         <ul className="flex flex-col items-start justify-center h-full space-y-6 bg-kobePurple">
           {routes.map(({ label, href }) => (
             <li onClick={() => setIsOpen(!open)} className="text-kobeWhite" key={href}>
@@ -63,7 +64,17 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
+        
       </nav>
-    </>
+      <figure className="relative px-1">
+        <Image
+          src="/img/kobe-logo.png"
+          alt="Kobe Bryant"
+          width={50}
+          height={50}
+        />
+      </figure>
+      
+    </main>
   );
 }

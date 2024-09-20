@@ -11,8 +11,10 @@ import ListItem from "./components/listItem";
 
 import {
   Table,
-  TableCaption
- 
+  TableCaption,
+  TableCell,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 
 // revalidate path once scores are submitted
@@ -72,10 +74,16 @@ export default async function Leaderboard() {
       <Header />
       {isAuthenticated && (
         <div className="w-[95%] m-auto flex flex-col">
-          
-
+          <h1 className="text-3xl text-center">Leader Board</h1>
           <Table>
-            <TableCaption>Leader Board</TableCaption>
+            
+            <TableHeader>
+              <TableRow>
+                <TableCell>Rank</TableCell>
+                <TableCell>Players</TableCell>
+                <TableCell>Score</TableCell>
+              </TableRow>
+            </TableHeader>
             {teamResults.map((result, index) => (
               <ListItem key={result._id} result={result} ranking={index + 1} />
             ))}
