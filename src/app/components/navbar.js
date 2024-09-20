@@ -58,7 +58,7 @@ export default function Navbar() {
         </header>
         <ul className="flex flex-col items-start justify-center h-full space-y-6 bg-kobePurple">
           {routes.map(({ label, href }) => (
-            <li className="text-kobeWhite" key={href}>
+            <li onClick={() => setIsOpen(!open)} className="text-kobeWhite" key={href}>
               <Link href={href}>{label}</Link>
             </li>
           ))}

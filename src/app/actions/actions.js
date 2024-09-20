@@ -58,32 +58,20 @@ export const addScore = async (formData) => {
           notes: formData.get("notes"),
           submitted: true,
         })
-        // Update existing score submission
-        // scoreSubmission.totalScore = totalScore;
-        // scoreSubmission.roundComplete = true;
-        // scoreSubmission.notes = formData.get("notes");
-        // scoreSubmission.submitted = true;
+        
         console.log(scoreSubmission, "scoreSubmission");
+        
         await scoreSubmission.save();
 
-      console.log("Score submitted successfully");
-      } else {
-        // Create new score submission
-      //   scoreSubmission = await Score.create({
-      //     player: player._id,
-      //     course: {
-      //       name: golfCourse.name,
-      //       _id: golfCourse._id
-      //     },
-      //     totalScore: totalScore,
-      //     roundComplete: true,
-      //     notes: formData.get("notes"),
-      //     submitted: true,
-      //   });
-      // }
-      console.log("Score already exists");
+        return { success: "Score submitted successfully" };
 
+      
+      } else {
      
+      if (scoreSubmission.submitted) {
+        return { error: "Score already submitted" };
+
+      }
       };
     } catch (error) {
       console.error("Error submitting score:", error.message);

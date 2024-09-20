@@ -105,7 +105,7 @@ export default function SetTeamsForm({ players }) {
         ))}
         
         <div className="absolute top-1 right-1 text-purple-700">
-          Step {currentStepIndex + 1} / {players.length / 2}
+          Step {currentStepIndex + 1} / {players.length / 2 + 1 }
         </div>
 
         <div>

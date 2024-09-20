@@ -1,4 +1,4 @@
-import Team from "@/app/schema/teamSchema";
+import TestTeam from "@/app/schema/testTeamSchema";
 import connect from "@/app/lib/mongoose";
 import { v4 as uuidv4 } from "uuid";
 
@@ -7,11 +7,11 @@ export async function POST(req) {
   try {
     await connect();
     const teamId = uuidv4();
-    console.log(teamId, "teamId");
+   
     // Parse the incoming JSON request
     const data = await req.json();
     const { selectedPlayers } = data;
-    console.log(selectedPlayers, "selected players");
+    
 
     // Ensure we have two players
     if (selectedPlayers.length !== 2) {
@@ -22,7 +22,7 @@ export async function POST(req) {
     }
 
     // Create a new team in the database
-    const newTeam = new Team({
+    const newTeam = new TestTeam({
       teamId: teamId,
       players: selectedPlayers.map((player) => player._id),
       isChampionTeam: false,
