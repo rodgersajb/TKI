@@ -9,6 +9,12 @@ import { redirect } from "next/navigation";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import ListItem from "./components/listItem";
 
+import {
+  Table,
+  TableCaption
+ 
+} from "@/components/ui/table";
+
 // revalidate path once scores are submitted
 
 export default async function Leaderboard() {
@@ -66,13 +72,14 @@ export default async function Leaderboard() {
       <Header />
       {isAuthenticated && (
         <div className="w-[95%] m-auto flex flex-col">
-          <h1>Leader Board</h1>
+          
 
-          <ul className="">
+          <Table>
+            <TableCaption>Leader Board</TableCaption>
             {teamResults.map((result, index) => (
               <ListItem key={result._id} result={result} ranking={index + 1} />
             ))}
-          </ul>
+          </Table>
         </div>
       )}
     </main>
