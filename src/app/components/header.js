@@ -47,15 +47,15 @@ export default async function Header() {
   }
 
   return (
-    <header className="flex items-center justify-between w-full">
+    <header>
       
 
-      <div className="flex items-center pt-1  text-sm pr-3">
+      <div className="flex items-center text-sm ">
         {isLoggedIn ? (
           <>
             <HoverCard>
               <HoverCardTrigger>
-                <FaUserCircle className="cursor-pointer" />
+                <FaUserCircle className="text-kobePurple cursor-pointer" />
               </HoverCardTrigger>
               <HoverCardContent>
                 <span>Logged in as {user?.given_name}</span>
