@@ -184,7 +184,7 @@ export default function TestForm({ sixFootGolf, quarryGolf, user, kindeId }) {
           >
             Submit score
           </button> */}
-              <SubmitButton onSubmit={handleSubmit}/>
+              <SubmitButton />
             </div>
             <label htmlFor="notes" name="notes" value="notes">
               Notes:

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
 import {
   Select,
@@ -10,46 +10,51 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+export default function SelectYear({ plainResults }) {
+  const [selectedYear, setSelectedYear] = useState("2023");
 
-export default function SelectYear({plainResults}) {
-const[selectedYear, setSelectedYear] = useState("");
+  let ranking = 1;
+  // Event handler for dropdown change
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
+  };
 
+  // Filter the results based on the selected year
+  const filteredResults = plainResults
+    .filter((result) => result.year === parseInt(selectedYear))
+    .sort((a, b) => a.score - b.score);
 
-// Event handler for dropdown change
-const handleYearChange = (event) => {
-  setSelectedYear(event.target.value);
-};
+  const uniqueYears = [...new Set(plainResults.map((result) => result.year))];
 
-// Filter the results based on the selected year
-const filteredResults = plainResults.filter(
-  (result) => result.year === parseInt(selectedYear)
-).sort((a, b) => a.score - b.score);
+  return (
+    <div className="w-full">
+      {/* Dropdown menu for year selection */}
+      <label htmlFor="year" className="text-right">
+        Select Year:{" "}
+      </label>
+      <select
+        className="text-right"
+        id="year"
+        value={selectedYear}
+        onChange={handleYearChange}
+      >
+        {/* <option value={plainResults.year.filter(year === 2023)} /> */}
+        {uniqueYears.map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ))}
+      </select>
 
-const uniqueYears = [...new Set(plainResults.map((result) => result.year))];
-
-return (
-  <div>
-    {/* Dropdown menu for year selection */}
-    <label htmlFor="year">Select Year: </label>
-    <select id="year" value={selectedYear} onChange={handleYearChange}>
-      {uniqueYears.map((year) => (
-        <option key={year} value={year}>
-          {year}
-        </option>
-      ))}
-      {/* Add more options as needed */}
-    </select>
-    
-
-    {/* Display the filtered results */}
-    <ul>
-      {filteredResults.map((result) => (
-        <li key={result._id}>
-          <strong>Team:</strong> {result.team.join(", ")} -{" "}
-          <strong>Score:</strong> {result.score}
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+      <ul className="flex flex-col w-[95%] m-auto">
+        {filteredResults.map((result, index) => (
+          <li className="flex justify-between w-full m-auto" key={result._id}>
+            <span>#{ranking + index}</span>
+            <span> {result.team.join(",")}</span>
+            <span>{result.score}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
