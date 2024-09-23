@@ -17,7 +17,7 @@ const routes = [
     href: "/submit-score",
   },
   {
-    label: "Leaderboard 7 ",
+    label: "Leaderboard ",
     href: "/leaderboard",
   },
   {

@@ -10,32 +10,22 @@ import "swiper/css/pagination";
 
 import toast from "react-hot-toast";
 
-import Link from "next/link";
-
 import { addScore } from "@/app/actions/actions";
-import SubmitButton from "./submitButton";
+import SubmitButton from "../../submit-score/components/submitButton";
 
-const route = [
-  {
-    label: "Quarry Golf Course",
-    href: "/quarry",
-  }
-]
-
-export default function TestForm({ sixFootGolf, quarryGolf, user, kindeId }) {
+export default function QuarryForm({ quarryGolf }) {
   // useState to keep track of course being played
-  const [course, setCourse] = useState(sixFootGolf);
-  console.log(course)
-  const [isSixFootComplete, setIsSixFootComplete] = useState(false);
-  
+  const [course, setCourse] = useState(quarryGolf);
+  console.log(course);
+  const [isQuarryComplete, setIsQuarryComplete] = useState(false);
+
   const handleSubmit = () => {
-    setIsSixFootComplete(true);
-    
-  }
+    setIsQuarryComplete(true);
+  };
 
   // useState to keep track of score
   const [score, setScore] = useState(
-    sixFootGolf.holes.reduce((acc, hole) => {
+    quarryGolf.holes.reduce((acc, hole) => {
       acc[hole.number] = "";
       return acc;
     }, {})
@@ -117,10 +107,10 @@ export default function TestForm({ sixFootGolf, quarryGolf, user, kindeId }) {
         }}
         className="flex flex-col"
       >
-        {!isSixFootComplete ? (
+        {!isQuarryComplete ? (
           <>
-            <input type="hidden" name="course" value={sixFootGolf.name} />
-            <h2>{sixFootGolf.name}</h2>
+            <input type="hidden" name="course" value={quarryGolf.name} />
+            <h2>{quarryGolf.name}</h2>
             <Swiper
               ref={swiperRef}
               slidesPerView={1}
@@ -129,7 +119,7 @@ export default function TestForm({ sixFootGolf, quarryGolf, user, kindeId }) {
               scrollbar={{ draggable: true }}
               style={{ width: "100%", height: "500px" }}
             >
-              {sixFootGolf.holes.map((hole, index) => {
+              {quarryGolf.holes.map((hole, index) => {
                 return (
                   <SwiperSlide key={index}>
                     <div className="text-kobePurple">
@@ -184,7 +174,7 @@ export default function TestForm({ sixFootGolf, quarryGolf, user, kindeId }) {
           >
             Submit score
           </button> */}
-              <SubmitButton onSubmit={handleSubmit}/>
+              <SubmitButton />
             </div>
             <label htmlFor="notes" name="notes" value="notes">
               Notes:
@@ -193,14 +183,7 @@ export default function TestForm({ sixFootGolf, quarryGolf, user, kindeId }) {
           </>
         ) : (
           <div>
-            <h3>Great job, Billy. Now go get after it!</h3>
-            <ul>
-              {route.map(({ label, href }) => (
-                <li key={href}>
-                  <Link href={href}>{label}</Link>
-                </li>
-              ))}
-            </ul>
+            <h3>Great job, Billy. Best of Luck!</h3>
           </div>
         )}
       </form>

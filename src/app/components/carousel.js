@@ -29,7 +29,7 @@ const images = [
 
 export default function ImageCarousel() {
     return (
-      <main className="m-auto p-4 w-[95%]">
+      <main className="m-auto p-4 w-[98%] relative">
         <Carousel
           plugins={[
             Autoplay({
@@ -40,12 +40,19 @@ export default function ImageCarousel() {
           <CarouselContent>
             {images.map((image, index) => (
               <CarouselItem className="relative max-h-[500px]" key={index}>
-                <Image style={{ borderRadius: "0.6rem"}} className="rounded-md aspect-sqaure object-cover h-[500px]  "  height={500} width={500} src={image} alt="recipe image" />
+                <Image
+                  style={{ borderRadius: "0.6rem" }}
+                  className="rounded-md aspect-sqaure object-cover h-[500px]  "
+                  height={500}
+                  width={500}
+                  src={image}
+                  alt="recipe image"
+                />
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="" />
-          <CarouselNext />
+          <CarouselPrevious className="-left-4 translate-y-64 text-kobePurple font-bold" />
+          <CarouselNext className="-right-4 translate-y-64 text-kobePurple hover:text-kobeGreen" />
         </Carousel>
       </main>
     );
