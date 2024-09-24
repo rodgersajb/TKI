@@ -8,7 +8,7 @@ import GolfCourse from "../schema/golfCourseSchema";
 import { revalidatePath } from "next/cache";
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { FaTemperatureLow } from "react-icons/fa";
+
 
 export const addScore = async (formData) => {
   // server session to be used for authentication
@@ -24,21 +24,21 @@ export const addScore = async (formData) => {
   const playerPermission = await getPermission("add:score");
   // if the user has permission to submit a score
   if (playerPermission?.isGranted) {
-    // let score = formData.get("score");
     
-    // const course = formData.get("course");
     const totalScore = formData.get("totalScore");
     const course = formData.get("course");
 
-    // console.log(totalScore, course,   "totalScore", "course");
+    console.log(totalScore, course,   "totalScore", "course");
     // Link to logged in player
     const player = await Player.findOne({ email: user.email });
     if (!player) {
-      return { error: "Player not found" };
+      console.log("Player not found");
+      // return { error: "Player not found" };
     }
     const golfCourse = await GolfCourse.findOne({ name: course });
     if (!golfCourse) {
-      return { error: "Course not found" };
+      console.log("Course not found");
+      // return { error: "Course not found" };
     }
     
     try {
@@ -78,7 +78,7 @@ export const addScore = async (formData) => {
       return { error: error.message };
     }
 
-    revalidatePath("/submit-score");
+    // revalidatePath("/submit-score");
   };
 };
 

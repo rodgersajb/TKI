@@ -46,7 +46,7 @@ export default function SelectYear({ plainResults }) {
         ))}
       </select>
 
-      <ul className="flex flex-col w-[95%] m-auto">
+      <ul className="flex flex-col w-[95%] m-auto gap-2">
         {filteredResults.map((result, index) => (
           <li className="flex justify-between w-full m-auto" key={result._id}>
             <span>#{ranking + index}</span>

@@ -1,4 +1,4 @@
-import Header from "../components/header";
+
 import connect from "../lib/mongoose";
 import TestScore from "../schema/testScoreSchema";
 import TestTeam from "../schema/testTeamSchema";
@@ -43,11 +43,12 @@ export default async function Leaderboard() {
     const teamScores = playerScores.filter((score) =>
       teamPlayers.includes(score.player.toString())
     );
+    console.log(teamScores[1], "teamScore");
 
-    // console.log(
-    //   `Team ${team.teamId} has players with these scores:`,
-    //   teamScores
-    // );
+    console.log(
+      `Team ${team.teamId} has players with these scores:`,
+      teamScores
+    );
     if (!teamScores) {
       console.log("No scores for this team");
       return;
@@ -66,17 +67,15 @@ export default async function Leaderboard() {
   const teamResults = await TeamScore.find()
     .populate("team")
     .sort({ totalScore: 1 });
-
+console.log(teamResults, "teamResults");
   // const results = await TeamScore.find().populate("player").sort({ score: 1 });
 
   return (
     <main className="min-h-svh w-full">
-      <Header />
       {isAuthenticated && (
         <div className="w-[95%] m-auto flex flex-col">
           <h1 className="text-3xl text-center">Leader Board</h1>
           <Table>
-            
             <TableHeader>
               <TableRow>
                 <TableCell>Rank</TableCell>

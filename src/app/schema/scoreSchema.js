@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const scoreSchema = new mongoose.Schema({
   player: {
     type: mongoose.Schema.Types.ObjectId,

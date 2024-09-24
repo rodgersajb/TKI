@@ -33,6 +33,7 @@ const testScoreSchema = new mongoose.Schema({
   },
 });
 
-const TestScore = mongoose.models.TestScore || mongoose.model("TestScore", testScoreSchema);
+const TestScore =
+  mongoose.models.TestScore || mongoose.model("TestScore", testScoreSchema);
 
 export default TestScore;

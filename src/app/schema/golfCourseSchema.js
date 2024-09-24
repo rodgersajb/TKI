@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const holeSchema = new mongoose.Schema({
     number: {
@@ -33,4 +33,4 @@ const golfCourseSchema = new mongoose.Schema({
 
 const GolfCourse = mongoose.models.GolfCourse || mongoose.model("GolfCourse", golfCourseSchema);
 
-export default GolfCourse
+module.exports = GolfCourse

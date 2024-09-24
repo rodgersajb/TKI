@@ -33,8 +33,8 @@ const routes = [
     href: "/set-teams",
   },
   {
-    label: "Noah's Page",
-    href: "/Noah",
+    label: "Quarry Score",
+    href: "/quarry",
   },
 ];
 

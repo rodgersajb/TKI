@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 
 import { addScore } from "@/app/actions/actions";
 import SubmitButton from "../../submit-score/components/submitButton";
+import ScoreButton from "@/app/components/scoreButton";
 
 export default function QuarryForm({ quarryGolf }) {
   // useState to keep track of course being played
@@ -45,25 +46,6 @@ export default function QuarryForm({ quarryGolf }) {
       const holeNumber = swiperRef.current.swiper.activeIndex + 1; // Get the current hole number
       const holeScore = score[holeNumber];
 
-      // Fetch to update scores
-      // const res = await fetch("http://localhost:3000/api/hole-scoring", {
-      //   method: "POST",
-      //   body: JSON.stringify({
-      //     player: kindeId,
-      //     course: sixFootGolf.name,
-      //     holeNumber,
-      //     strokes: holeScore,
-      //   }),
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // });
-
-      // if (res.ok) {
-      //   toast.success("Score updated successfully!");
-      // } else {
-      //   toast.error("Failed to update score.");
-      // }
     }
   };
 
@@ -87,19 +69,18 @@ export default function QuarryForm({ quarryGolf }) {
   console.log(finalScore, "finalScore");
 
   return (
-    <>
+    
       <form
         ref={ref}
         action={async (formData) => {
           ref.current?.reset();
 
-          formData.append("totalScore", finalScore);
-
-          const result = await addScore(formData);
-          if (result?.error) {
-            toast.error(result.error);
-          } else {
-            toast.success(result.success);
+          ref.current?.reset();
+          try {
+            await addScore(formData);
+            toast.success("Score submitted successfully");
+          } catch (error) {
+            toast.error("Error in submission", error);
           }
           // input validation
 
@@ -107,8 +88,8 @@ export default function QuarryForm({ quarryGolf }) {
         }}
         className="flex flex-col"
       >
-        {!isQuarryComplete ? (
-          <>
+        
+         
             <input type="hidden" name="course" value={quarryGolf.name} />
             <h2>{quarryGolf.name}</h2>
             <Swiper
@@ -168,25 +149,15 @@ export default function QuarryForm({ quarryGolf }) {
               </button>
             </div>
             <div className="flex justify-center items-center">
-              {/* <button
-            className="bg-kobeYellow text-kobePurple font-bold mt-6 py-2 px-8 rounded-sm"
-            onClick={handleSubmit}
-          >
-            Submit score
-          </button> */}
-              <SubmitButton />
+           
+              <ScoreButton  />
             </div>
             <label htmlFor="notes" name="notes" value="notes">
               Notes:
             </label>
             <textarea name="notes" id="notes" value="notes"></textarea>
-          </>
-        ) : (
-          <div>
-            <h3>Great job, Billy. Best of Luck!</h3>
-          </div>
-        )}
+         
       </form>
-    </>
+   
   );
 }
