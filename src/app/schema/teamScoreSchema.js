@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const teamScoreSchema = new mongoose.Schema({
   team: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "Team",
     required: true,
   },

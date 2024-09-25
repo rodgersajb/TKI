@@ -1,4 +1,3 @@
-
 import connect from "../lib/mongoose";
 import TestScore from "../schema/testScoreSchema";
 import TestTeam from "../schema/testTeamSchema";
@@ -16,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import mongoose from "mongoose";
 
 // revalidate path once scores are submitted
 
@@ -37,38 +37,57 @@ export default async function Leaderboard() {
   // Fetch all individual scores
 
   // Now we have both teams and player scores to start matching
-  teams.forEach((team) => {
+  teams.forEach(async (team) => {
     const teamPlayers = team.players.map((player) => player._id.toString());
-
+    // console.log(teamPlayers, "teamPlayers");
     const teamScores = playerScores.filter((score) =>
       teamPlayers.includes(score.player.toString())
     );
-    console.log(teamScores[1], "teamScore");
 
-    console.log(
-      `Team ${team.teamId} has players with these scores:`,
-      teamScores
+    // const teamObjectId = new mongoose.Types.ObjectId(team.teamId);
+    // console.log(teamObjectId, "teamObjectId");
+
+    console.log(teamScores, "teamScores");
+
+    // const testing = teamScores.map((score) => score.totalScore);
+    // console.log(testing, "testing");
+    // console.log(
+    //   `Team ${team.teamId} has players with these scores:`,
+    //   teamScores
+    // );
+
+    const courseId = teamScores[0].course._id;
+
+    // total score for team on Six Foot Bay
+    const totalScore = teamScores.reduce(
+      (acc, score) => acc + score.totalScore,
+      0
     );
-    if (!teamScores) {
-      console.log("No scores for this team");
-      return;
-    } else if (teamScores > 0)
-      TeamScore.create({
-        team: team._id,
-        course: teamScores[0].course,
-        totalScore: teamScores.reduce(
-          (acc, score) => acc + score.totalScore,
-          0
-        ),
+    console.log(totalScore, "totalScore");
+
+    let existingTeamScore = await TeamScore.findOne({
+      team: team.teamId,
+      course: courseId,
+    });
+
+    if (!existingTeamScore) {
+      existingTeamScore = new TeamScore({
+        team: team.teamId,
+        course: courseId,
+        totalScore,
       });
+      console.log(existingTeamScore, "existingTeamScore");
+    } else {
+      existingTeamScore.totalScore = totalScore;
+    }
+    existingTeamScore.save();
+    await existingTeamScore;
   });
 
   let ranking = 0;
-  const teamResults = await TeamScore.find()
-    .populate("team")
-    .sort({ totalScore: 1 });
-console.log(teamResults, "teamResults");
-  // const results = await TeamScore.find().populate("player").sort({ score: 1 });
+  const teamResults = await TeamScore.find();
+   console.log(teamResults, "teamResults");
+
 
   return (
     <main className="min-h-svh w-full">

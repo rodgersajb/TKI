@@ -1,4 +1,4 @@
-import TestTeam from "@/app/schema/testTeamSchema";
+import Team from "@/app/schema/teamSchema";
 
 import {
   Table,
@@ -12,11 +12,11 @@ import {
 } from "@/components/ui/table";
 
 export default async function ListItem({ result, ranking }) {
-  console.log(result, "result");
-  const teamId = await result.team.teamId;
+  console.log(result.team, "result");
+  const teamId = await result.team;
 
-  const team = await TestTeam.findOne({ teamId }).populate("players").lean();
-
+  const team = await Team.findOne({ teamId }).populate("players").lean();
+  console.log(team, "team");
   return (
     <>
       
