@@ -33,7 +33,7 @@ export default function SelectYear({ plainResults }) {
         Select Year:{" "}
       </label>
       <select
-        className="text-right"
+        className="text-right mb-6"
         id="year"
         value={selectedYear}
         onChange={handleYearChange}
@@ -48,9 +48,9 @@ export default function SelectYear({ plainResults }) {
 
       <ul className="flex flex-col w-[95%] m-auto gap-2">
         {filteredResults.map((result, index) => (
-          <li className="flex justify-between w-full m-auto" key={result._id}>
+          <li className="odd:bg-kobePurple odd:text-kobeWhite p-2 flex justify-between w-full m-auto" key={result._id}>
             <span>#{ranking + index}</span>
-            <span> {result.team.join(",")}</span>
+            <span> {result.team.join(", ")}</span>
             <span>{result.score}</span>
           </li>
         ))}

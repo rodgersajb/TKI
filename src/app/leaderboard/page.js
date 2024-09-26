@@ -28,6 +28,7 @@ export default async function Leaderboard() {
 
   const { getUser, isAuthenticated } = getKindeServerSession();
   const user = await getUser();
+  console.log(user, "user");
 
   const findPlayer = await Player.findById("66f2d81c9b4770c9a54f7ac2");
   console.log(findPlayer, "findPlayer");
@@ -46,6 +47,7 @@ export default async function Leaderboard() {
     const teamPlayers = team.players.map((player) => player._id.toString());
     // console.log(teamPlayers, "teamPlayers");
     const teamScores = playerScores.filter((score) =>
+      console.log(score.player, "score.player") ||
       teamPlayers.includes(score.player.toString())
     );
 
@@ -88,8 +90,8 @@ export default async function Leaderboard() {
   const teamResults = await TeamScore.find().sort({ totalScore: 1 }).lean();
 
   return (
-    <main className="min-h-svh w-full">
-      <h1 className=" bg-kobePurple text-kobeWhite py-6 text-xl text-center">
+    <main className=" w-full">
+      <h1 className=" bg-kobePurple text-kobeWhite py-8 text-xl text-center">
         Leader Board
       </h1>
       {isAuthenticated && (
