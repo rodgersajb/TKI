@@ -13,7 +13,12 @@ const testScoreSchema = new mongoose.Schema({
     },
     _id: { type: mongoose.Schema.Types.ObjectId, ref: "GolfCourse" },
   },
-
+  holeScores: [
+    {
+      hole: {type: Number, required: true},
+      holeScore: {type: Number, required: true},
+    }
+  ],
   totalScore: {
     type: Number,
     required: true,

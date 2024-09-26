@@ -2,8 +2,11 @@ import connect from "../lib/mongoose";
 import TestScore from "../schema/testScoreSchema";
 import TestTeam from "../schema/testTeamSchema";
 import TeamScore from "../schema/teamScoreSchema";
+import Player from "../schema/player";
 
 import { redirect } from "next/navigation";
+
+import { revalidatePath } from "next/cache";
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import ListItem from "./components/listItem";
@@ -26,7 +29,9 @@ export default async function Leaderboard() {
 
   const { getUser, isAuthenticated } = getKindeServerSession();
   const user = await getUser();
-
+  
+  const findPlayer = await Player.findById("66f2d81c9b4770c9a54f7ac2");
+  console.log(findPlayer, "findPlayer");
   const playerScores = await TestScore.find();
 
   const teams = await TestTeam.find().populate("players").lean();
@@ -44,13 +49,8 @@ export default async function Leaderboard() {
       teamPlayers.includes(score.player.toString())
     );
 
-    // const teamObjectId = new mongoose.Types.ObjectId(team.teamId);
-    // console.log(teamObjectId, "teamObjectId");
+    // console.log(teamScores, "teamScores");
 
-    console.log(teamScores, "teamScores");
-
-    // const testing = teamScores.map((score) => score.totalScore);
-    // console.log(testing, "testing");
     // console.log(
     //   `Team ${team.teamId} has players with these scores:`,
     //   teamScores
@@ -63,7 +63,7 @@ export default async function Leaderboard() {
       (acc, score) => acc + score.totalScore,
       0
     );
-    console.log(totalScore, "totalScore");
+    
 
     let existingTeamScore = await TeamScore.findOne({
       team: team.teamId,
@@ -76,27 +76,29 @@ export default async function Leaderboard() {
         course: courseId,
         totalScore,
       });
-      console.log(existingTeamScore, "existingTeamScore");
+      
     } else {
       existingTeamScore.totalScore = totalScore;
     }
     existingTeamScore.save();
     await existingTeamScore;
+    revalidatePath("/leaderboard");
   });
 
   let ranking = 0;
-  const teamResults = await TeamScore.find();
-   console.log(teamResults, "teamResults");
-
+  const teamResults = await TeamScore.find().sort({ totalScore: 1 }).lean();
+  
 
   return (
     <main className="min-h-svh w-full">
+      <h1 className=" bg-kobePurple text-kobeWhite py-6 text-xl text-center">
+        Leader Board
+      </h1>
       {isAuthenticated && (
         <div className="w-[95%] m-auto flex flex-col">
-          <h1 className="text-3xl text-center">Leader Board</h1>
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="odd:bg-kobeYellow">
                 <TableCell>Rank</TableCell>
                 <TableCell>Players</TableCell>
                 <TableCell>Score</TableCell>

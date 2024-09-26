@@ -11,11 +11,11 @@ import Player from "../schema/player";
 export default async function SubmitScore() {
   const res = await fetch("http://localhost:3000/api/courses");
   const data = await res.json();
-  console.log(data[0].name, data[1].name, "data");
+  // console.log(data[0].name, data[1].name, "data");
   // check for authentication
   const teamResults = await fetch("http://localhost:3000/api/teams");
   const teamData = await teamResults.json();
-  console.log(teamData, "teamData");
+  // console.log(teamData, "teamData");
 
   const getPlayers = teamData.flatMap((team) => team.players);
   // const players = await Player.find({ _id: { $in: getPlayers } });
@@ -24,6 +24,7 @@ export default async function SubmitScore() {
   const { isAuthenticated, getUser } =  getKindeServerSession();
   // get user from kinde session
   const user = await getUser();
+  
   // find the user in the database by the email provided and then send off as props
 //  const findUserByEmail = await Player.findOne({ email: user.email }).lean();
 
