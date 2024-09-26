@@ -18,7 +18,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import mongoose from "mongoose";
 
 // revalidate path once scores are submitted
 
@@ -29,10 +28,11 @@ export default async function Leaderboard() {
 
   const { getUser, isAuthenticated } = getKindeServerSession();
   const user = await getUser();
-  
+
   const findPlayer = await Player.findById("66f2d81c9b4770c9a54f7ac2");
   console.log(findPlayer, "findPlayer");
   const playerScores = await TestScore.find();
+  console.log(playerScores, "playerScores");
 
   const teams = await TestTeam.find().populate("players").lean();
 
@@ -57,13 +57,13 @@ export default async function Leaderboard() {
     // );
 
     const courseId = teamScores[0].course._id;
+    console.log(courseId, "courseId");
 
     // total score for team on Six Foot Bay
     const totalScore = teamScores.reduce(
       (acc, score) => acc + score.totalScore,
       0
     );
-    
 
     let existingTeamScore = await TeamScore.findOne({
       team: team.teamId,
@@ -76,7 +76,6 @@ export default async function Leaderboard() {
         course: courseId,
         totalScore,
       });
-      
     } else {
       existingTeamScore.totalScore = totalScore;
     }
@@ -87,7 +86,6 @@ export default async function Leaderboard() {
 
   let ranking = 0;
   const teamResults = await TeamScore.find().sort({ totalScore: 1 }).lean();
-  
 
   return (
     <main className="min-h-svh w-full">

@@ -40,14 +40,28 @@ export default function TestForm({ sixFootGolf, user, kindeId }) {
       swiperRef.current.swiper.slideNext();
       console.log(swiperRef.current.swiper, "swiperRef");
 
-      const formData = new FormData(ref.current);
+      const holeNumber = currentHole; // Adjusted to reflect the current hole
+      // Get the hole score for the current hole
+      const holeScore = score[holeNumber]; // Get the score for the current hol
+      console.log("Hole Number:", holeNumber, "Hole Score:", holeScore);
+      const formData = new FormData();
       formData.append("course", sixFootGolf.name);
-      formData.append("holeScore", score);
-      formData.append("holeNumber", swiperRef.current.swiper.activeIndex + 1);
-      console.log(formData, "formData");
+      formData.append("holeScore", holeScore); // Send the score for the current hole
+      formData.append("holeNumber", holeNumber);
+
+      
+      // Log individual values
+      console.log("Form Data:", {
+        course: sixFootGolf.name,
+        holeScore: holeScore,
+        holeNumber: holeNumber,
+      });
       try {
-        await addScore(formData);
-        
+        const response = await addScore(formData);
+        console.log(response, 'RESPONSE')
+
+        setHoleScores((prev) => ({ ...prev, [holeNumber]: holeScore }));
+
         if (currentHole < sixFootGolf.holes.length) {
           setCurrentHole((prev) => prev + 1);
         } else {
@@ -60,9 +74,6 @@ export default function TestForm({ sixFootGolf, user, kindeId }) {
       } catch (error) {
         console.log("Error in submission", error);
       }
-
-      const holeNumber = swiperRef.current.swiper.activeIndex + 1; // Get the current hole number
-      const holeScore = score[holeNumber];
     }
   };
 
@@ -90,13 +101,14 @@ export default function TestForm({ sixFootGolf, user, kindeId }) {
       ref={ref}
       // action={async (formData) => {
       //   ref.current?.reset();
-      //   // try {
-      //   //   await addScore(formData);
-      //   //   toast.success("Score submitted successfully");
-      //   // } catch (error) {
-      //   //   console.error("Error in submission", error);
-      //   // }
+      //   try {
+      //     await addScore(formData);
+      //     toast.success("Score submitted successfully");
+      //   } catch (error) {
+      //     console.error("Error in submission", error);
+      //   }
       // }}
+     
       className="flex flex-col"
     >
       <input type="hidden" name="course" value="Six Foot Bay" />
@@ -128,7 +140,7 @@ export default function TestForm({ sixFootGolf, user, kindeId }) {
                       handleScoreChange(hole.number, e.target.value)
                     }
                   />
-                  <input type="number" hidden name="holeNumber" defaultValue={hole.number} />
+                  <input type="number" name="holeNumber" defaultValue={hole.number} />
                 </div>
               </div>
             </SwiperSlide>

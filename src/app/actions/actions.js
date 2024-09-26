@@ -48,6 +48,7 @@ export const addScore = async (formData) => {
       console.log("Course not found");
       // return { error: "Course not found" };
     }
+  
 
     try {
       // Check if a score submission already exists for the player and course
@@ -70,28 +71,42 @@ export const addScore = async (formData) => {
           submitted: false,
         });
 
-        console.log(scoreSubmission, "scoreSubmission");
-
+        
+        console.log("Score Submission", scoreSubmission);
         await scoreSubmission.save();
 
         return { success: "Hole score submitted successfully" };
       } else {
-        scoreSubmission.holeScores[holeNumber] = holeScore;
-      }
-      if (
-        Object.keys(scoreSubmission.holeScores).length ===
-        golfCourse.holes.length
-      ) {
-        const totalScore = Object.values(scoreSubmission.holeScores).reduce(
-          (acc, score) => acc + (parseInt(score) || 0),
-          0
+        // Check hole Index
+        const holeIndex = scoreSubmission.holeScores.findIndex(
+          (hole) => hole.hole === holeNumber
         );
-        scoreSubmission.totalScore = totalScore;
-        scoreSubmission.roundComplete = true;
-        scoreSubmission.submitted = true;
+        console.log("Current Hole Score", scoreSubmission.holeScores);
+        if (holeIndex !== -1) {
+          scoreSubmission.holeScores[holeIndex].holeScore = holeScore;
+          console.log("Hole Score Updated", scoreSubmission.holeScores);
+          }
+          else {
+          scoreSubmission.holeScores.push({ hole: holeNumber, holeScore: holeScore });
+          console.log("Hole Score", scoreSubmission.holeScores);
+          }
+        } 
 
-        console.log("Round Complete", totalScore);
-      }
+        console.log("UPDATED HOLES", scoreSubmission.holeScores);
+      
+      
+       if (scoreSubmission.holeScores.length === golfCourse.holes.length) {
+         const totalScore = scoreSubmission.holeScores.reduce(
+           (acc, hole) => acc + hole.holeScore,
+           0
+         );
+         scoreSubmission.totalScore = totalScore;
+         scoreSubmission.roundComplete = true;
+         scoreSubmission.submitted = true;
+
+         console.log("Round Complete", totalScore);
+       }
+       console.log("Score Submission", scoreSubmission);
       await scoreSubmission.save();
 
       return { success: "Score submitted successfully" };
@@ -100,8 +115,8 @@ export const addScore = async (formData) => {
       return { error: error.message };
     }
 
-    // revalidatePath("/submit-score");
   }
+  revalidatePath("/submit-score");
 };
 
 export const getPastResults = async () => {
