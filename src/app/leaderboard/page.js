@@ -30,10 +30,8 @@ export default async function Leaderboard() {
   const user = await getUser();
   console.log(user, "user");
 
-  const findPlayer = await Player.findById("66f2d81c9b4770c9a54f7ac2");
-  console.log(findPlayer, "findPlayer");
   const playerScores = await TestScore.find();
-  console.log(playerScores, "playerScores");
+  // console.log(playerScores, "playerScores");
 
   const teams = await TestTeam.find().populate("players").lean();
 
@@ -47,7 +45,6 @@ export default async function Leaderboard() {
     const teamPlayers = team.players.map((player) => player._id.toString());
     // console.log(teamPlayers, "teamPlayers");
     const teamScores = playerScores.filter((score) =>
-      console.log(score.player, "score.player") ||
       teamPlayers.includes(score.player.toString())
     );
 
@@ -59,7 +56,7 @@ export default async function Leaderboard() {
     // );
 
     const courseId = teamScores[0].course._id;
-    console.log(courseId, "courseId");
+    // console.log(courseId, "courseId");
 
     // total score for team on Six Foot Bay
     const totalScore = teamScores.reduce(
@@ -77,17 +74,26 @@ export default async function Leaderboard() {
         team: team.teamId,
         course: courseId,
         totalScore,
+        playerScores: teamScores.map((score) => ({
+          player: score.player,
+          holeScore: score.holeScores,
+        })),
       });
     } else {
       existingTeamScore.totalScore = totalScore;
+      existingTeamScore.playerScores = teamScores.map((score) => ({
+        player: score.player,
+        holeScore: score.holeScores,
+      }));
     }
-    existingTeamScore.save();
-    await existingTeamScore;
+    await existingTeamScore.save();
+    // console.log(existingTeamScore, "existingTeamScore");
     revalidatePath("/leaderboard");
   });
 
   let ranking = 0;
   const teamResults = await TeamScore.find().sort({ totalScore: 1 }).lean();
+  // console.log(teamResults, "teamResults");
 
   return (
     <main className=" w-full">
@@ -96,18 +102,24 @@ export default async function Leaderboard() {
       </h1>
       {isAuthenticated && (
         <div className="w-[95%] m-auto flex flex-col">
-          <Table>
-            <TableHeader>
-              <TableRow className="odd:bg-kobeYellow">
-                <TableCell>Rank</TableCell>
-                <TableCell>Players</TableCell>
-                <TableCell>Score</TableCell>
-              </TableRow>
-            </TableHeader>
+          <div>
+            <span>Rank</span>
+            <span>Players</span>
+            <span>Score</span>
+          </div>
+         
             {teamResults.map((result, index) => (
-              <ListItem key={result._id} result={result} ranking={index + 1} />
+              <>
+                <ListItem
+                  key={result._id}
+                  result={result}
+                  ranking={index + 1}
+                  
+                />
+                
+              </>
             ))}
-          </Table>
+          
         </div>
       )}
     </main>
