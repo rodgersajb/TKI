@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Scorecard from "./scorecard";
 
 export default async function ListItem({ result, ranking }) {
   console.log(result, "result");
@@ -30,51 +31,14 @@ export default async function ListItem({ result, ranking }) {
             );
 
             return (
-              <div key={player._id} className="flex flex-col">
+              <section key={player._id} className="flex flex-col">
                 <span>
                   {player.givenName} {player.familyName}
                 </span>
                 {/* Render player's hole scores */}
-                {playerScore && (
-                  <div className="flex w-full">
-                    {playerScore && (
-                      <div>
-                        <h3 className="font-bold">Scorecard</h3>
-                        <div className="grid grid-cols-9 gap-2">
-                          {playerScore.holeScore
-                            .filter((scoreObj) => scoreObj.hole <= 9)
-                            .map((scoreObj) => (
-                              <div
-                                className="flex flex-col items-center w-full"
-                                key={scoreObj._id}
-                              >
-                                <div className="bg-kobePurple px-4 text-kobeWhite">
-                                  <span>{scoreObj.hole}</span>
-                                </div>
-                                <span>{scoreObj.holeScore}</span>
-                              </div>
-                            ))}
-                        </div>
-                        <div className="grid grid-cols-9 gap-2">
-                          {playerScore.holeScore
-                            .filter((scoreObj) => scoreObj.hole > 9)
-                            .map((scoreObj) => (
-                              <div
-                                className="flex flex-col items-center w-full"
-                                key={scoreObj._id}
-                              >
-                                <div className="bg-kobePurple px-3 text-kobeWhite">
-                                  <span className="">{scoreObj.hole}</span>
-                                </div>
-                                <span>{scoreObj.holeScore}</span>
-                              </div>
-                            ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+                
+                <Scorecard playerScore={playerScore} />
+              </section>
             );
           })}
         </TableCell>

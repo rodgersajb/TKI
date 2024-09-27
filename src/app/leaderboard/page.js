@@ -101,7 +101,7 @@ export default async function Leaderboard() {
         Leader Board
       </h1>
       {isAuthenticated && (
-        <div className="w-[95%] m-auto flex flex-col">
+        <section className="w-[95%] m-auto flex flex-col">
           <div>
             <span>Rank</span>
             <span>Players</span>
@@ -120,7 +120,7 @@ export default async function Leaderboard() {
               </>
             ))}
           
-        </div>
+        </section>
       )}
     </main>
   );
