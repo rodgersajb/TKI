@@ -5,9 +5,12 @@ import Player from "../schema/player";
 import TestScore from "../schema/testScoreSchema";
 import GolfCourse from "../schema/golfCourseSchema";
 
+
+
 import { revalidatePath } from "next/cache";
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { redirect } from "next/navigation";
 
 export const addScore = async (formData) => {
   // server session to be used for authentication
@@ -48,7 +51,6 @@ export const addScore = async (formData) => {
       console.log("Course not found");
       // return { error: "Course not found" };
     }
-  
 
     try {
       // Check if a score submission already exists for the player and course
@@ -71,7 +73,6 @@ export const addScore = async (formData) => {
           submitted: false,
         });
 
-        
         console.log("Score Submission", scoreSubmission);
         await scoreSubmission.save();
 
@@ -85,28 +86,29 @@ export const addScore = async (formData) => {
         if (holeIndex !== -1) {
           scoreSubmission.holeScores[holeIndex].holeScore = holeScore;
           console.log("Hole Score Updated", scoreSubmission.holeScores);
-          }
-          else {
-          scoreSubmission.holeScores.push({ hole: holeNumber, holeScore: holeScore });
+        } else {
+          scoreSubmission.holeScores.push({
+            hole: holeNumber,
+            holeScore: holeScore,
+          });
           console.log("Hole Score", scoreSubmission.holeScores);
-          }
-        } 
+        }
+      }
 
-        console.log("UPDATED HOLES", scoreSubmission.holeScores);
-      
-      
-       if (scoreSubmission.holeScores.length === golfCourse.holes.length) {
-         const totalScore = scoreSubmission.holeScores.reduce(
-           (acc, hole) => acc + hole.holeScore,
-           0
-         );
-         scoreSubmission.totalScore = totalScore;
-         scoreSubmission.roundComplete = true;
-         scoreSubmission.submitted = true;
+      console.log("UPDATED HOLES", scoreSubmission.holeScores);
 
-         console.log("Round Complete", totalScore);
-       }
-       console.log("Score Submission", scoreSubmission);
+      if (scoreSubmission.holeScores.length === golfCourse.holes.length) {
+        const totalScore = scoreSubmission.holeScores.reduce(
+          (acc, hole) => acc + hole.holeScore,
+          0
+        );
+        scoreSubmission.totalScore = totalScore;
+        scoreSubmission.roundComplete = true;
+        scoreSubmission.submitted = true;
+
+        console.log("Round Complete", totalScore);
+      }
+      console.log("Score Submission", scoreSubmission);
       await scoreSubmission.save();
 
       return { success: "Score submitted successfully" };
@@ -114,7 +116,6 @@ export const addScore = async (formData) => {
       console.error("Error submitting score:", error.message);
       return { error: error.message };
     }
-
   }
   revalidatePath("/submit-score");
 };
@@ -129,14 +130,23 @@ export const getPastResults = async () => {
   return pastResults;
 };
 
-// export const setTeams = async (formData) => {
-//   const { getUser, getPermission } = getKindeServerSession();
-//   const user = await getUser();
-//   const teams = formData.get("selectedPlayers");
-//   // const adminPermission = await getPermission("set:teams");
-//   // if (adminPermission?.isGranted) {
-//   //   const { selectedPlayers } = Object.fromEntries(formData.entries());
-//     console.log(teams, );
-//   // }
-//   revalidatePath("/set-teams");
-// };
+export const updatePlayerProfile = async (formData) => {
+  // server function to update a player's profile
+  // with the data from the form
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+  const handicap = formData.get("handicap");
+
+  const player = await Player.findOne({ email: user.email });
+  if (!player) {
+    console.log("Player not found");
+    return { error: "Player not found" };
+  } else {
+    player.handicap = handicap;
+    player.profileComplete = true;
+  }
+  await player.save();
+  
+
+  redirect("/submit-score");
+};

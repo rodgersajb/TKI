@@ -13,11 +13,13 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
+import { redirect } from "next/navigation";
+
 import connect from "@/app/lib/mongoose";
 import Player from "../schema/player";
 
 import { Button } from "@/components/ui/button";
-
+import CompleteProfile from "./complete-profile";
 
 export default async function Header() {
   // connect to db
@@ -26,9 +28,7 @@ export default async function Header() {
   const { isAuthenticated, getUser } = getKindeServerSession();
   const isLoggedIn = await isAuthenticated();
 
- 
   const user = await getUser();
-  
 
   // check if user is logged in and in database
   if (isLoggedIn) {
@@ -42,14 +42,16 @@ export default async function Header() {
         givenName: user.given_name,
         familyName: user.family_name,
         picture: user.picture,
+        profileComplete: false,
       });
     }
+   
+    
   }
 
   return (
+    
     <header>
-      
-
       <div className="flex items-center text-sm ">
         {isLoggedIn ? (
           <>
@@ -64,7 +66,6 @@ export default async function Header() {
                 </Button>
               </HoverCardContent>
             </HoverCard>
-          
           </>
         ) : (
           <>

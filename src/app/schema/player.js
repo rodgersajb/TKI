@@ -31,6 +31,7 @@ const playerSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  profileComplete: { type: Boolean, default: false },
 });
 
 const Player = mongoose.models.Player || mongoose.model("Player", playerSchema);
