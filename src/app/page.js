@@ -6,6 +6,8 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import connect from "./lib/mongoose";
 import Player from "./schema/player";
 
+import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/server";
+
 export default async function Home() {
   // Connect to the database
   await connect();
@@ -15,18 +17,24 @@ export default async function Home() {
   const isLoggedIn = await isAuthenticated();
 
   // Redirect if the user is not logged in
-  if (!isLoggedIn) {
-    return redirect("/login"); 
+
+  // If the user is logged in, fetch their details
+  let dbPlayer = null;
+  let user = null;
+
+  if (isLoggedIn) {
+    user = await getUser();
+    console.log(user, "user");
+
+    // Fetch the player from the database based on Kinde ID
+    dbPlayer = await Player.findOne({ kindeId: user.id });
+
+    // Redirect to complete profile page if the user profile is incomplete
+    if (dbPlayer && !dbPlayer.profileComplete) {
+      return redirect("/complete-profile");
+    }
   }
 
-  const user = await getUser();
-  console.log(user, "user");
-  const dbPlayer = await Player.findOne({ kindeId: user.id });
-
-  // Redirect if the profile is incomplete
-  if (dbPlayer && !dbPlayer.profileComplete) {
-    return redirect("/complete-profile");
-  }
   return (
     <main className="flex min-h-svh flex-col gap-8  w-full mx-auto ">
       <figure className="relative ">
@@ -57,6 +65,13 @@ export default async function Home() {
         <h3 className="text-xl font-bold">The Kobe Invitational</h3>
         <h5 className="text-sm">Six Foot Bay Golf Club, Buckhorn, ON</h5>
         <h5 className="text-sm">Quarry Golf Club, Ennismore, ON</h5>
+        <RegisterLink
+          style={{ borderRadius: "0.2rem" }}
+          className="bg-kobeYellow py-1 px-2 text-kobePurple font-bold w-1/2 text-center"
+          postLoginRedirectURL="/"
+        >
+          Register
+        </RegisterLink>
       </section>
       <section>
         <ImageCarousel />

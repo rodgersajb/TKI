@@ -5,8 +5,6 @@ import Player from "../schema/player";
 import TestScore from "../schema/testScoreSchema";
 import GolfCourse from "../schema/golfCourseSchema";
 
-
-
 import { revalidatePath } from "next/cache";
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
@@ -136,6 +134,7 @@ export const updatePlayerProfile = async (formData) => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   const handicap = formData.get("handicap");
+  const bio = formData.get("bio");
 
   // Find the player in the database
   // if there s no player, return an error
@@ -148,9 +147,6 @@ export const updatePlayerProfile = async (formData) => {
     player.handicap = handicap;
     player.profileComplete = true;
     await player.save();
-    redirect("/")
-    
-  }  
-
- 
+    redirect("/");
+  }
 };

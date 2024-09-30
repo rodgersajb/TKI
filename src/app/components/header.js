@@ -45,12 +45,9 @@ export default async function Header() {
         profileComplete: false,
       });
     }
-   
-    
   }
 
   return (
-    
     <header>
       <div className="flex items-center text-sm ">
         {isLoggedIn ? (
@@ -62,16 +59,21 @@ export default async function Header() {
               <HoverCardContent>
                 <span>Logged in as {user?.given_name}</span>
                 <Button>
-                  <LogoutLink>Logout</LogoutLink>
+                  <LogoutLink postLogoutRedirectURL="/">Logout</LogoutLink>
                 </Button>
               </HoverCardContent>
             </HoverCard>
           </>
         ) : (
-          <>
-            <LoginLink postLoginRedirectURL="/">Sign In</LoginLink>
-            <RegisterLink postLoginRedirectURL="/">Register</RegisterLink>
-          </>
+          <div className="flex gap-2 items-center">
+            <LoginLink
+              style={{ borderRadius: "0.2rem" }}
+              className="bg-kobePurple py-1 px-2 text-kobeWhite  "
+              postLoginRedirectURL="/"
+            >
+              Sign In
+            </LoginLink>
+          </div>
         )}
       </div>
     </header>
