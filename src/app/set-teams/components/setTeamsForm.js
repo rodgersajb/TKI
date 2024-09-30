@@ -22,9 +22,10 @@ export default function SetTeamsForm({ players }) {
 
   const handlePlayerSelect = (player) => {
     // Prevent selecting the same player twice
-    if (selectedPlayers.some((p) => p._id === player._id)) return;
+    if (selectedPlayers.some((p) => p._id === player._id)) {
+      setSelectedPlayers(selectedPlayers.filter((p) => p._id !== player._id));
 
-    if (selectedPlayers.length < 2) {
+    } else if (selectedPlayers.length < 2) {
       setSelectedPlayers([...selectedPlayers, player]);
     }
   };
@@ -63,28 +64,37 @@ export default function SetTeamsForm({ players }) {
     }
   };
 
+  const handlePreviousStep = () => {
+    if (currentStepIndex > 0) {
+      const previousTeam = submittedTeams[currentStepIndex - 1];
+      setSelectedPlayers(previousTeam);
+      previousStep();
+    }
+  }
+
   // Filter out selected players
   // Filter remaining players for the current step
   const remainingPlayers = players.filter(
-    (player) => !submittedTeams.flat().some((p) => p._id === player._id)
+    (player) => !submittedTeams.flat().some((p) => p._id === player._id) || selectedPlayers.some((p) => p._id === player._id)
   );
   return (
-    <main className="relative">
+    <main className="">
+      <div className="absolute top-1 right-1 text-kobeWhite">
+        Step {currentStepIndex + 1} / {players.length / 2 + 1}
+      </div>
+      <h2 className="text-center pt-2 text-xl text-kobePurple font-bold">Select Teams:</h2>
       <form
-      action={async (formData) => {
-        
-
-        // const teams = await setTeams(formData);
-        // if (teams?.error) {
-        //   toast.error(teams.error);
-        // } else {
-        //   toast.success("Teams submitted");
-        // }
-        // // input validation
-
-        // await setTeams(formData);
-      }
-      }
+        className="flex flex-col gap-4 pt-4"
+        action={async (formData) => {
+          // const teams = await setTeams(formData);
+          // if (teams?.error) {
+          //   toast.error(teams.error);
+          // } else {
+          //   toast.success("Teams submitted");
+          // }
+          // // input validation
+          // await setTeams(formData);
+        }}
       >
         {remainingPlayers.map((player) => (
           <button
@@ -92,9 +102,10 @@ export default function SetTeamsForm({ players }) {
             type="button"
             name="teams"
             id="teams"
-            className={`px-4 py-2 border ${
+            style={{ borderRadius: "0.2rem" }}
+            className={`px-4 py-2 bg-kobePurple text-kobeWhite w-1/2 m-auto ${
               selectedPlayers.some((p) => p._id === player._id)
-                ? "bg-kobePurple text-kobeWhite"
+                ? "bg-kobeGreen text-kobeWhite"
                 : "bg-gray-200"
             }`}
             onClick={() => handlePlayerSelect(player)}
@@ -103,21 +114,23 @@ export default function SetTeamsForm({ players }) {
             {player.givenName} {player.familyName}
           </button>
         ))}
-        
-        <div className="absolute top-1 right-1 text-purple-700">
-          Step {currentStepIndex + 1} / {players.length / 2 + 1 }
-        </div>
 
-        <div>
-          <button onClick={previousStep}>
+        <div className="flex justify-between px-4">
+          <button onClick={handlePreviousStep}>
             {/* if we are at the beginning of the steps we will go no further */}
             {currentStepIndex === 0 ? "" : "Back"}
           </button>
           <button
-          type="submit"
-          value={selectedPlayers}
-          id="selectedPlayers"
-          onClick={handleSubmitTeam}>
+            type="submit"
+            disabled={selectedPlayers.length !== 2}
+            value={selectedPlayers}
+            id="selectedPlayers"
+            onClick={handleSubmitTeam}
+            style={{ borderRadius: "0.2rem" }}
+            className={` px-6 py-2 transition-all duration-300 
+              ${selectedPlayers.length === 2 ? "bg-kobePurple text-kobeWhite" : "disabled:opacity-50 bg-gray-400 text-gray-400"}
+              `}
+          >
             {/* checking if the currentIndex is equal to the length of the players array that is divided in to two to show teams - 1 length of the array. If there is next step*/}
             {currentStepIndex === players.length / 2 - 1
               ? "Finalize Teams"

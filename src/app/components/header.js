@@ -59,7 +59,7 @@ export default async function Header() {
               <HoverCardContent>
                 <span>Logged in as {user?.given_name}</span>
                 <Button>
-                  <LogoutLink postLogoutRedirectURL="/">Logout</LogoutLink>
+                  <LogoutLink>Logout</LogoutLink>
                 </Button>
               </HoverCardContent>
             </HoverCard>

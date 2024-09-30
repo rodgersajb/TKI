@@ -146,6 +146,7 @@ export const updatePlayerProfile = async (formData) => {
   } else {
     player.handicap = handicap;
     player.profileComplete = true;
+    player.bio = bio;
     await player.save();
     redirect("/");
   }

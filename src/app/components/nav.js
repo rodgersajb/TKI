@@ -7,6 +7,7 @@ import { IoClose } from "react-icons/io5";
 
 import Link from "next/link";
 
+
 const routes = [
   {
     label: "Home",
@@ -31,6 +32,7 @@ const routes = [
   {
     label: "Begin Kobe",
     href: "/set-teams",
+    requiredPermission: "create:team"
   },
   {
     label: "Quarry Score",
