@@ -1,19 +1,19 @@
 "use client";
-import ScoreButton from "./scoreButton";
+
 import { updatePlayerProfile } from "../actions/actions";
 import { useRef } from "react";
 
+import Image from "next/image";
+
 import toast from "react-hot-toast";
-
-
+import SignUpButton from "./submitButton";
 
 export default function CompleteProfile() {
   const ref = useRef(null);
- 
 
   return (
     <form
-    className="w-[95%] m-auto flex flex-col items-center justify-center"
+      className="w-[75%] m-auto flex flex-col items-center justify-center gap-4 pt-4"
       ref={ref}
       action={async (formData) => {
         ref.current?.reset();
@@ -22,19 +22,45 @@ export default function CompleteProfile() {
           toast.error(profile.error);
         } else {
           toast.success(profile.success);
-         
         }
         await updatePlayerProfile(formData);
-        
       }}
     >
-      <div className="flex flex-col items-center  justify-center gap-4">
-        <label htmlFor="handicap">Please enter your handicap</label>
-        <input type="number" name="handicap" required />
-        <label htmlFor="image">Let's see that beautiful face</label>
-        <input type="file" name="image" />
+      <div className="flex flex-col items-center justify-center gap-4 w-full m-auto">
+        <div className="flex flex-col items-start gap-2 w-full m-auto">
+          <label
+            style={{ borderRadius: "0.2rem" }}
+            className="text-kobeWhite bg-kobePurple w-full p-1"
+            htmlFor="handicap"
+          >
+            Please enter your handicap:
+          </label>
+          <input
+            className="w-1/5 outline-none"
+            type="number"
+            name="handicap"
+            required
+          />
+        </div>
+        
+
+        <div className="flex flex-col items-start gap-2 w-full">
+          <label
+            style={{ borderRadius: "0.2rem" }}
+            className="text-kobeWhite bg-kobePurple w-full p-1"
+            htmlFor="bio"
+          >
+            Bio, or fighting words:
+          </label>
+          <textarea
+            className="w-full outline-none"
+            name="bio"
+            placeholder="ie. My name is Brandon... "
+          />
+        </div>
       </div>
-      <ScoreButton />
+
+      <SignUpButton />
     </form>
   );
 }

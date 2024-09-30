@@ -16,7 +16,7 @@ export default async function Home() {
 
   // Redirect if the user is not logged in
   if (!isLoggedIn) {
-    return redirect("/login"); // Or another appropriate login page
+    return redirect("/login"); 
   }
 
   const user = await getUser();

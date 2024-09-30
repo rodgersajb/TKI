@@ -137,6 +137,9 @@ export const updatePlayerProfile = async (formData) => {
   const user = await getUser();
   const handicap = formData.get("handicap");
 
+  // Find the player in the database
+  // if there s no player, return an error
+  // else complete the player and redirect back to home page
   const player = await Player.findOne({ email: user.email });
   if (!player) {
     console.log("Player not found");
@@ -144,9 +147,10 @@ export const updatePlayerProfile = async (formData) => {
   } else {
     player.handicap = handicap;
     player.profileComplete = true;
-  }
-  await player.save();
-  
+    await player.save();
+    redirect("/")
+    
+  }  
 
-  redirect("/submit-score");
+ 
 };
