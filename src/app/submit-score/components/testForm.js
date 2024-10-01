@@ -18,6 +18,8 @@ import { addScore } from "@/app/actions/actions";
 import { confirmScoreSubmission } from "@/app/actions/actions";
 
 import SubmitButton from "./submitButton";
+import FrontNine from "./front";
+import BackNine from "./back";
 
 export default function TestForm({ sixFootGolf, user, kindeId }) {
   // useState to keep track of score
@@ -112,9 +114,7 @@ export default function TestForm({ sixFootGolf, user, kindeId }) {
           toast.success("Score submitted successfully");
           setTimeout(async () => {
             window.location.href = "/complete";
-          }
-          , 2000);
-
+          }, 2000);
         } catch (error) {
           console.error("Error in submission", error);
         }
@@ -122,19 +122,22 @@ export default function TestForm({ sixFootGolf, user, kindeId }) {
       className="flex flex-col items-center"
     >
       <input type="hidden" name="course" value="Six Foot Bay" />
-      <h2>{sixFootGolf.name}</h2>
+      <h2 className="text-center w-full py-2 bg-kobePurple text-kobeWhite text-2xl">
+        {sixFootGolf.name}
+      </h2>
       <Swiper
         ref={swiperRef}
         slidesPerView={1}
         navigation={false}
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
-        style={{ width: "100%", height: "200px" }}
+        style={{ width: "100%", height: "300px" }}
       >
         {sixFootGolf.holes.map((hole, index) => {
+          console.log(hole.par, "hole");
           return (
-            <SwiperSlide className="" key={index}>
-              <div className="text-kobePurple ">
+            <SwiperSlide key={index}>
+              <div className="text-kobePurple flex flex-col gap-4 pt-4 ">
                 <div
                   style={{ borderRadius: "0.2rem" }}
                   className="w-[95%] m-auto bg-kobeWhite drop-shadow-md flex flex-col items-center"
@@ -147,12 +150,14 @@ export default function TestForm({ sixFootGolf, user, kindeId }) {
                     <p> {hole.yardage} Yards</p>
                   </div>
                 </div>
-                <div className="flex flex-col w-1/2 items-center justify-center m-auto">
+                <div className="flex w-[95%] items-center justify-center m-auto bg-kobeWhite rounded drop-shadow-md py-4 gap-2 ">
                   <label htmlFor="score">Score:</label>
                   <input
                     type="number"
                     id={`score-${hole.number}`}
                     name="holeScore"
+                    defaultValue={hole.par}
+                    className="w-1/6 text-center"
                     onChange={(e) =>
                       handleScoreChange(hole.number, e.target.value)
                     }
@@ -163,21 +168,40 @@ export default function TestForm({ sixFootGolf, user, kindeId }) {
                     defaultValue={hole.number}
                   />
                 </div>
+                <div className="flex flex-col w-[95%]  bg-kobeWhite rounded drop-shadow-md m-auto gap-2 ">
+                  <label className="text-center" htmlFor="notes" name="notes" value="notes">
+                    Notes:
+                  </label>
+                  <textarea
+                    name="notes"
+                    id="notes"
+                    className="border-none outline-none"
+                  ></textarea>
+                </div>
               </div>
             </SwiperSlide>
           );
         })}
         <SwiperSlide>
-          <div className="flex flex-col items-center justify-center w-full">
-            <h3>Confirm Your Scores</h3>
-            <div className="flex  w-full">
-              {sixFootGolf.holes.map((hole) => (
-                <p key={hole.number} className="w-1/6">
-                  Hole {hole.number}: {score[hole.number]}
-                </p>
-              ))}
+          <div className="flex flex-col items-center gap-4 justify-center w-full">
+            <div className="flex flex-col gap-2  w-[90%]">
+              <h3 className="pt-4">Does this look right to you?</h3>
+              <div className="flex">
+                {sixFootGolf.holes
+                  .filter((hole) => hole.number <= 9)
+                  .map((hole) => (
+                    <FrontNine key={hole.number} hole={hole} score={score} />
+                  ))}
+              </div>
+              <div className="flex">
+                {sixFootGolf.holes
+                  .filter((hole) => hole.number > 9)
+                  .map((hole) => (
+                    <BackNine key={hole.number} hole={hole} score={score} />
+                  ))}
+              </div>
             </div>
-            <p>Total Score: {finalScore}</p>
+            {/* <p>Total Score: {finalScore}</p> */}
             <div className="flex justify-center items-center">
               <SubmitButton />
             </div>
@@ -203,23 +227,15 @@ export default function TestForm({ sixFootGolf, user, kindeId }) {
             Next Hole
           </button>
         ) : (
-          <button className="bg-kobeYellow text-kobePurple py-1 px-2" type="button" onClick={handleNextSlide}>
+          <button
+            className="bg-kobeYellow text-kobePurple font-bold py-1 px-2"
+            type="button"
+            onClick={handleNextSlide}
+          >
             Finish & Confirm
           </button>
         )}
       </div>
-      {/* <button
-        type="submit"
-        onClick={handleNextSlide}
-        className="bg-kobePurple mt-2 w-1/2 m-auto text-kobeWhite py-1 px-2 rounded-lg"
-      >
-        TESTING BUTTON
-      </button> */}
-
-      <label htmlFor="notes" name="notes" value="notes">
-        Notes:
-      </label>
-      <textarea name="notes" id="notes" defaultValue="notes"></textarea>
     </form>
   );
 }

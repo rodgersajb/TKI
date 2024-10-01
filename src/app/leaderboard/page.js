@@ -11,13 +11,7 @@ import { revalidatePath } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import ListItem from "./components/listItem";
 
-import {
-  Table,
-  TableCaption,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+
 
 // revalidate path once scores are submitted
 
@@ -96,20 +90,16 @@ export default async function Leaderboard() {
   // console.log(teamResults, "teamResults");
 
   return (
-    <main className=" w-full">
+    <main className=" w-full bg-kobeGrey">
       <h1 className=" bg-kobePurple text-kobeWhite py-8 text-xl text-center">
         Leader Board
       </h1>
       {isAuthenticated && (
-        <section className="w-[95%] m-auto flex flex-col">
-          <div>
-            <span>Rank</span>
-            <span>Players</span>
-            <span>Score</span>
-          </div>
+        <section className="w-full m-auto flex flex-col">
+          
          
             {teamResults.map((result, index) => (
-              <>
+              
                 <ListItem
                   key={result._id}
                   result={result}
@@ -117,7 +107,7 @@ export default async function Leaderboard() {
                   
                 />
                 
-              </>
+              
             ))}
           
         </section>

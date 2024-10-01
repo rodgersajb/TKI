@@ -25,7 +25,7 @@ export default async function Footer() {
     },
   ];
   return (
-    <footer className="bg-kobePurple w-full text-kobeWhite mt-12 p-4  ">
+    <footer className="bg-kobePurple w-full text-kobeWhite  p-4  ">
       <nav className="flex flex-col gap-4 items-center justify-center">
         <div className=" w-full flex justify-between text-sm border-b-kobeWhite border-b ">
           <h2 className="text-xl">The Kobe</h2>
