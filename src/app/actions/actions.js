@@ -95,18 +95,18 @@ export const addScore = async (formData) => {
 
       console.log("UPDATED HOLES", scoreSubmission.holeScores);
 
-      if (scoreSubmission.holeScores.length === golfCourse.holes.length) {
-        const totalScore = scoreSubmission.holeScores.reduce(
-          (acc, hole) => acc + hole.holeScore,
-          0
-        );
-        scoreSubmission.totalScore = totalScore;
-        scoreSubmission.roundComplete = true;
-        scoreSubmission.submitted = true;
+      // if (scoreSubmission.holeScores.length === golfCourse.holes.length) {
+      //   const totalScore = scoreSubmission.holeScores.reduce(
+      //     (acc, hole) => acc + hole.holeScore,
+      //     0
+      //   );
+      //   scoreSubmission.totalScore = totalScore;
+      //   scoreSubmission.roundComplete = true;
+      //   scoreSubmission.submitted = true;
 
-        console.log("Round Complete", totalScore);
-      }
-      console.log("Score Submission", scoreSubmission);
+      //   console.log("Round Complete", totalScore);
+      // }
+      // console.log("Score Submission", scoreSubmission);
       await scoreSubmission.save();
 
       return { success: "Score submitted successfully" };
@@ -149,5 +149,49 @@ export const updatePlayerProfile = async (formData) => {
     player.bio = bio;
     await player.save();
     redirect("/");
+  }
+};
+
+export const confirmScoreSubmission = async (formData) => {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+  const course = formData.get("course");
+
+  const player = await Player.findOne({ email: user.email });
+  if (!player) {
+    console.log("Player not found");
+    return { error: "Player not found" };
+  }
+
+  const golfCourse = await GolfCourse.findOne({ name: course });
+  if (!golfCourse) {
+    console.log("Course not found");
+    return { error: "Course not found" };
+  }
+
+  try {
+    const scoreSubmission = await TestScore.findOne({
+      player: player._id,
+      "course._id": golfCourse._id,
+    });
+
+    if (!scoreSubmission) {
+      return { error: "Score submission not found" };
+    }
+
+    // Calculate total score and mark the round as complete
+    const totalScore = scoreSubmission.holeScores.reduce(
+      (acc, hole) => acc + hole.holeScore,
+      0
+    );
+    scoreSubmission.totalScore = totalScore;
+    scoreSubmission.roundComplete = true; // Mark round as complete
+    scoreSubmission.submitted = true; // Mark score as submitted
+    console.log(scoreSubmission, "Score Submission");
+    await scoreSubmission.save();
+    
+  } catch (error) {
+    console.error("Error confirming score submission:", error.message);
+    return { error: error.message };
   }
 };

@@ -1,13 +1,16 @@
-"use client";
+import Image from 'next/image';
 
-import Confetti from "react-confetti";
 
-export default function Complete() {
+
+export default async function Complete() {
   
   return (
-    <div className="h-svh">
+    <div className="h-svh w-full">
+      <figure className='relative h-[300px] w-full'>
+        <Image src="/img/lake.jpg" alt="Lake" fill />
+      </figure>
       <h2>You did it Billy. Now go get em</h2>
-      <Confetti className="h-inherit"/>
+      
     </div>
   );
 }

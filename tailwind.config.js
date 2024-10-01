@@ -11,7 +11,8 @@ module.exports = {
   		kobePurple: '#552583',
   		kobeYellow: '#fdb927',
   		kobeGreen: '#4CAF50',
-  		kobeWhite: '#F8F9FA'
+  		kobeWhite: '#F8F9FA',
+		kobeGrey: '#d3d3d3'
   	},
   	extend: {
   		backgroundImage: {

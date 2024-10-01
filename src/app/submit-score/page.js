@@ -49,9 +49,9 @@ export default async function SubmitScore() {
   }
 
   return (
-    <main className="text-center">
+    <main className="bg-kobeGrey h-svh">
       
-      <h1 className="text-xl">Submit Score</h1>
+      
       
       <TestForm quarryGolf={data[1]} sixFootGolf={data[0]}  />
     </main>
