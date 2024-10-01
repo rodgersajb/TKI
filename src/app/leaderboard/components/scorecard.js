@@ -16,7 +16,20 @@ export default function Scorecard({ playerScore }) {
     setIsOpen(!isOpen);
   };
 
-  console.log(playerScore, "playerScore");
+ 
+
+  
+  let currentScore = 0; // Default value
+
+  // Check if holeScore exists and has items
+ 
+  // Check if holeScore exists and is an array with items
+  if (playerScore && playerScore.holeScore && Array.isArray(playerScore.holeScore) && playerScore.holeScore.length > 0) {
+    currentScore = playerScore.holeScore.reduce((acc, scoreObj) => acc + scoreObj.holeScore, 0);
+  }
+
+  
+
   return (
     <main className="flex w-full">
       {playerScore && (
@@ -40,8 +53,8 @@ export default function Scorecard({ playerScore }) {
               <motion.section
                 initial={{ opacity: 0, translateY: 100 }}
                 animate={{ opacity: 1, translateY: 0 }}
-                exit={{  opacity: 0, translateY: 100 }}
-                duration={{ duration: 0.3, easeInOut}}
+                exit={{ opacity: 0, translateY: 100 }}
+                duration={{ duration: 0.3, easeInOut }}
               >
                 <div className="grid grid-cols-9 gap-2 ">
                   <FrontNine playerScore={playerScore} />
@@ -52,6 +65,7 @@ export default function Scorecard({ playerScore }) {
               </motion.section>
             )}
           </AnimatePresence>
+          <p>{currentScore}</p>
         </section>
       )}
     </main>
