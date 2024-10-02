@@ -20,11 +20,14 @@ export const addScore = async (formData) => {
     const course = formData.get("course");
     const holeScore = Number(formData.get("holeScore")); // Ensure the score is a number
     const holeNumber = Number(formData.get("holeNumber")); // Ensure the hole number is a number
+    const netScore = Number(formData.get("netScore"));
 
     console.log(
       course,
       holeScore,
       holeNumber,
+      netScore,
+      "netScore",
       "course",
       "holeScore",
       "holeNumber"
@@ -59,6 +62,7 @@ export const addScore = async (formData) => {
           },
           holeScores: [{ hole: holeNumber, holeScore }],
           totalScore: 0,
+          netScore,
           roundComplete: false,
           notes: formData.get("notes"),
           submitted: false,
@@ -88,6 +92,7 @@ export const addScore = async (formData) => {
           });
           console.log("Hole Score Added", scoreSubmission.holeScores);
         }
+        scoreSubmission.netScore = Math.max(holeScore - handicap, 0);
 
         // Save the updated score submission
         await scoreSubmission.save();
