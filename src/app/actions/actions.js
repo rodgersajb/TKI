@@ -133,7 +133,8 @@ export const updatePlayerProfile = async (formData) => {
   // with the data from the form
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  const handicap = formData.get("handicap");
+  const sixFootHandicap = formData.get("sixFootHandicap");
+  const quarryHandicap = formData.get("quarryHandicap");
   const bio = formData.get("bio");
 
   // Find the player in the database
@@ -144,13 +145,14 @@ export const updatePlayerProfile = async (formData) => {
     console.log("Player not found");
     return { error: "Player not found" };
   } else {
-    player.handicap = handicap;
+    player.sixFootHandicap = sixFootHandicap;
+    player.quarryHandicap = quarryHandicap;
     player.profileComplete = true;
     player.bio = bio;
     await player.save();
-    redirect("/");
-  }
-};
+  };
+  redirect("/");
+}
 
 export const confirmScoreSubmission = async (formData) => {
   const { getUser } = getKindeServerSession();
@@ -189,7 +191,6 @@ export const confirmScoreSubmission = async (formData) => {
     scoreSubmission.submitted = true; // Mark score as submitted
     console.log(scoreSubmission, "Score Submission");
     await scoreSubmission.save();
-    
   } catch (error) {
     console.error("Error confirming score submission:", error.message);
     return { error: error.message };

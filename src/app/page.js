@@ -30,9 +30,9 @@ export default async function Home() {
     dbPlayer = await Player.findOne({ kindeId: user.id });
 
     // Redirect to complete profile page if the user profile is incomplete
-    if (dbPlayer && !dbPlayer.profileComplete) {
-      return redirect("/complete-profile");
-    }
+    // if (dbPlayer && !dbPlayer.profileComplete) {
+    //   redirect("/complete-profile");
+    // }
   }
 
   return (
@@ -65,13 +65,17 @@ export default async function Home() {
         <h3 className="text-xl font-bold">The Kobe Invitational</h3>
         <h5 className="text-sm">Six Foot Bay Golf Club, Buckhorn, ON</h5>
         <h5 className="text-sm">Quarry Golf Club, Ennismore, ON</h5>
-        <RegisterLink
-          style={{ borderRadius: "0.2rem" }}
-          className="bg-kobeYellow py-1 px-2 text-kobePurple font-bold w-1/2 text-center"
-          postLoginRedirectURL="/"
-        >
-          Register
-        </RegisterLink>
+        {!isLoggedIn ? (
+          <RegisterLink
+            style={{ borderRadius: "0.2rem" }}
+            className="bg-kobeYellow py-1 px-2 text-kobePurple font-bold w-1/2 text-center"
+            postLoginRedirectURL="/complete-profile"
+          >
+            Register
+          </RegisterLink>
+        ) : (
+          <h5 className="text-sm">Welcome, {user?.given_name}</h5>
+        )}
       </section>
       <section>
         <ImageCarousel />

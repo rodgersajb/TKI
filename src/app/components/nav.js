@@ -6,6 +6,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
 
 import Link from "next/link";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
 
 
 const routes = [
@@ -68,6 +69,8 @@ export default function Nav() {
               <Link href={href}>{label}</Link>
             </li>
           ))}
+          
+          <LogoutLink className="text-kobeWhite">Logout</LogoutLink>
         </ul>
       </nav>
     </>

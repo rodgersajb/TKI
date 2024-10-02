@@ -15,9 +15,13 @@ const playerSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
-  handicap: {
+  sixFootHandicap: {
     type: Number,
-    default: 14,
+    default: 1,
+  },
+  quarryHandicap: {
+    type: Number,
+    default: 1,
   },
   isAdmin: {
     type: Boolean,
