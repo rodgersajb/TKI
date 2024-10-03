@@ -53,6 +53,7 @@ export default function TestForm({ sixFootGolf, user }) {
       formData.append("holeScore", holeScore); // Send the score for the current hole
       formData.append("holeNumber", holeNumber);
       formData.append("netScore", currentNetScore);
+      formData.append("handicap", user.sixFootHandicap);
 
       const totalNetScore = Object.values(netScore).reduce(
         (acc, score) => acc + (parseInt(score) || 0),
@@ -80,13 +81,7 @@ export default function TestForm({ sixFootGolf, user }) {
         if (holeNumber < sixFootGolf.holes.length) {
           setCurrentHole(holeNumber + 1);
           swiperRef.current.swiper.slideNext();
-        } else {
-          // const totalScore = Object.values(holeScores).reduce(
-          //   (acc, score) => acc + (parseInt(score) || 0),
-          //   0
-          // );
-          // formData.append("totalScore", totalScore);
-          // Show confirmation component
+        } else {        
           setConfirmation(true);
           swiperRef.current.swiper.slideNext();
         }

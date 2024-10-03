@@ -21,12 +21,15 @@ export const addScore = async (formData) => {
     const holeScore = Number(formData.get("holeScore")); // Ensure the score is a number
     const holeNumber = Number(formData.get("holeNumber")); // Ensure the hole number is a number
     const netScore = Number(formData.get("netScore"));
+    const handicap = Number(formData.get("handicap"));
 
     console.log(
       course,
       holeScore,
       holeNumber,
       netScore,
+      handicap,
+      "handicap",
       "netScore",
       "course",
       "holeScore",
@@ -106,6 +109,27 @@ export const addScore = async (formData) => {
   }
 };
 
+export const getHoleScore = async () => {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+  try {
+    const player = await Player.findOne({ email: user.email });
+    if (!player) {
+      console.log("Player not found");
+      return { error: "Player not found" };
+    }
+    const testScores = await TestScore.find({ player: player._id, "course.name": courseName, });
+
+    if (!testScores || testScores.length === 0) {
+      return { error: "No scores found" };
+    }
+    console.log("HoleScores", testScores);
+    return testScores;
+  } catch (error) {
+    return { error: error.message };
+    
+  }
+}
 
 export const getPastResults = async () => {
   const rawFormData = {
