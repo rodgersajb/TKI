@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function ScoreInput({ hole, score, netScore, onScoreChange, onNetScoreChange }) {
-  const [scores, setScores] = useState([]);
+  const [holeScores, setHoleScores] = useState([]);
+  const [netHoleScores, setNetHoleScores] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -11,10 +13,12 @@ export default function ScoreInput({ hole, score, netScore, onScoreChange, onNet
       try {
         const res = await fetch("/api/getScores");
         if (!res.ok) {
-          throw new Error("Failed to fetch scores");
+          toast.error("Failed to fetch scores");
         }
         const data = await res.json();
-        setScores(data);
+        console.log(data, "DATA");
+        setHoleScores(data[0].holeScores);
+        setNetHoleScores(data[0].netScores);
         console.log(scores, "SCORES HEY");
       } catch (error) {
         setError(error.message);
@@ -22,12 +26,18 @@ export default function ScoreInput({ hole, score, netScore, onScoreChange, onNet
     };
     fetchScores();
   }, []);
- 
-  // Extract the hole score for the current hole
-  // const currentScore =
-  //   scores.length > 0
-  //     ? scores[0].holeScores.find((holeScore) => holeScore.hole === hole.number)
-  //     : null;
+
+  // Find the score for the current hole number
+  const currentHoleScore =
+    holeScores.length > 0
+      ? holeScores.find((holeScore) => holeScore.hole === hole.number)
+      : null;
+
+  // Find the net score for the current hole number
+  const currentNetScore =
+    netHoleScores.length > 0
+      ? netHoleScores.find((netScore) => netScore.hole === hole.number)
+      : null;
 
   return (
     <div className="flex w-[95%] items-center justify-center m-auto bg-kobeWhite rounded drop-shadow-md py-4 gap-2 ">
@@ -36,8 +46,8 @@ export default function ScoreInput({ hole, score, netScore, onScoreChange, onNet
         type="number"
         id={`score-${hole.number}`}
         name="holeScore"
-        // Set value from the extracted score or default to an empty string
-        value={score ? score.holeScore : ""}
+        // If there's a current hole score, set it as the input value
+        value={currentHoleScore ? currentHoleScore.holeScore : score || ""}
         className="w-1/6 text-center"
         onChange={(e) => onScoreChange(hole.number, e.target.value)}
       />
@@ -46,7 +56,8 @@ export default function ScoreInput({ hole, score, netScore, onScoreChange, onNet
         type="number"
         id={`netScore-${hole.number}`}
         name="netScore"
-        value={netScore[hole.number] || ""}
+        // Set value for the net score or default to an empty string
+        value={currentNetScore ? currentNetScore.netScore : netScore || ""}
         className="w-1/6 text-center"
         onChange={(e) => onNetScoreChange(hole.number, e.target.value)}
       />

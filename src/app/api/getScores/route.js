@@ -2,7 +2,7 @@ import Player from "@/app/schema/player";
 import TestScore from "@/app/schema/testScoreSchema";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-export async function GET(req) {
+export async function GET(response) {
   try {
     // Get the user session
     const { getUser } = getKindeServerSession();
@@ -16,10 +16,18 @@ export async function GET(req) {
       });
     }
 
-    // Find the player's scores
+    // Find the player's scores from TestScore collection
     const scores = await TestScore.find({ player: player._id })
-      .populate("player")
+      .populate("player") // If you have player references
       .exec();
+
+    // If no scores found, return an empty array
+    if (!scores || scores.length === 0) {
+      return new Response(JSON.stringify([]), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
     // Return the scores as a JSON response
     return new Response(JSON.stringify(scores), {
