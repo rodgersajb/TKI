@@ -2,21 +2,19 @@ import TestTeam from "@/app/schema/testTeamSchema";
 import connect from "@/app/lib/mongoose";
 import { v4 as uuidv4 } from "uuid";
 
-
 export async function POST(req) {
   try {
     await connect();
     const teamId = uuidv4();
-   
+
     // Parse the incoming JSON request
     const data = await req.json();
     const { selectedPlayers } = data;
-    
 
     // Ensure we have two players
-    if (selectedPlayers.length !== 2) {
+    if (!selectedPlayers || selectedPlayers.length !== 2) {
       return new Response(
-        JSON.stringify({ error: "You must select two players." }),
+        JSON.stringify({ error: "You must select exactly two players." }),
         { status: 400 }
       );
     }

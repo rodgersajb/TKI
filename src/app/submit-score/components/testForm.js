@@ -16,10 +16,10 @@ import { confirmScoreSubmission } from "@/app/actions/actions";
 import ScoreSummary from "./scoreSummary";
 import ScoreInput from "./scoreInput";
 import HoleInfo from "./holeInfo";
-import { set } from "mongoose";
+
 
 export default function TestForm({ sixFootGolf, user }) {
-  console.log(user, "user in TEST FORM");
+
   // useState to keep track of score
   const [score, setScore] = useState(
     sixFootGolf.holes.reduce((acc, hole) => {
@@ -53,7 +53,7 @@ export default function TestForm({ sixFootGolf, user }) {
       formData.append("holeScore", holeScore); // Send the score for the current hole
       formData.append("holeNumber", holeNumber);
       formData.append("netScore", currentNetScore);
-      formData.append("handicap", user.sixFootHandicap);
+      
 
       const totalNetScore = Object.values(netScore).reduce(
         (acc, score) => acc + (parseInt(score) || 0),
@@ -81,7 +81,7 @@ export default function TestForm({ sixFootGolf, user }) {
         if (holeNumber < sixFootGolf.holes.length) {
           setCurrentHole(holeNumber + 1);
           swiperRef.current.swiper.slideNext();
-        } else {        
+        } else {
           setConfirmation(true);
           swiperRef.current.swiper.slideNext();
         }
@@ -103,6 +103,11 @@ export default function TestForm({ sixFootGolf, user }) {
   const handleScoreChange = (holeNumber, value) => {
     setScore((prev) => ({ ...prev, [holeNumber]: value }));
     console.log(score, "score");
+  };
+
+  const handleNetScoreChange = (holeNumber, value) => {
+    setNetScore((prev) => ({ ...prev, [holeNumber]: value }));
+    console.log(netScore, "netScore");
   };
   // calculate total score by converting object values to an array and then reducing the array to a single value
   const finalScore = Object.values(score).reduce(
@@ -165,7 +170,7 @@ export default function TestForm({ sixFootGolf, user }) {
   useEffect(() => {
     calculateNetScore();
   }, [score]);
-
+console.log(score, "score");
   return (
     <form
       ref={ref}
@@ -209,6 +214,8 @@ export default function TestForm({ sixFootGolf, user }) {
                   hole={hole}
                   score={score}
                   onScoreChange={handleScoreChange}
+                  netScore={netScore}
+                  onNetScoreChange={handleNetScoreChange}
                 />
 
                 <div className="flex flex-col w-[95%]  bg-kobeWhite rounded drop-shadow-md m-auto gap-2 ">

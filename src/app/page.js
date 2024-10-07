@@ -24,7 +24,7 @@ export default async function Home() {
 
   if (isLoggedIn) {
     user = await getUser();
-    console.log(user, "user");
+    
 
     // Fetch the player from the database based on Kinde ID
     dbPlayer = await Player.findOne({ kindeId: user.id });
@@ -74,7 +74,7 @@ export default async function Home() {
             Register
           </RegisterLink>
         ) : (
-          <h5 className="text-sm">Welcome, {user?.given_name}</h5>
+          <h5 className="text-sm">Welcome, {user?.given_name} {user?.family_name}</h5>
         )}
       </section>
       <section>

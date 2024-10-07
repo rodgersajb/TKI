@@ -11,8 +11,6 @@ import { revalidatePath } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import ListItem from "./components/listItem";
 
-
-
 // revalidate path once scores are submitted
 
 export default async function Leaderboard() {
@@ -42,14 +40,14 @@ export default async function Leaderboard() {
       teamPlayers.includes(score.player.toString())
     );
 
-    // console.log(teamScores, "teamScores");
+    console.log(teamScores, "teamScores");
 
     // console.log(
     //   `Team ${team.teamId} has players with these scores:`,
     //   teamScores
     // );
 
-    const courseId = teamScores[0].course._id;
+    const courseId = teamScores.course._id;
     // console.log(courseId, "courseId");
 
     // total score for team on Six Foot Bay
@@ -96,20 +94,9 @@ export default async function Leaderboard() {
       </h1>
       {isAuthenticated && (
         <section className="w-full m-auto flex flex-col">
-          
-         
-            {teamResults.map((result, index) => (
-              
-                <ListItem
-                  key={result._id}
-                  result={result}
-                  ranking={index + 1}
-                  
-                />
-                
-              
-            ))}
-          
+          {teamResults.map((result, index) => (
+            <ListItem key={result._id} result={result} ranking={index + 1} />
+          ))}
         </section>
       )}
     </main>

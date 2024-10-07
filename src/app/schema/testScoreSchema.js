@@ -17,13 +17,16 @@ const testScoreSchema = new mongoose.Schema({
     {
       hole: { type: Number, required: true },
       holeScore: { type: Number, required: true },
+      
     },
   ],
+  netScores: [
+    {
+    hole: { type: Number, required: true },
+    netScore: { type: Number, required: true },
+    }
+  ],
   totalScore: {
-    type: Number,
-    required: true,
-  },
-  netScore: {
     type: Number,
     required: true,
   },

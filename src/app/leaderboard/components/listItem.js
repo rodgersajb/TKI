@@ -8,7 +8,8 @@ export default async function ListItem({ result, ranking }) {
   const teamId = await result.team;
 
   const team = await Team.findOne({ teamId }).populate("players").lean();
-  // console.log(team, "team");
+
+  
   // console.log(team.players, "team");
 
   // Calculate total current score for the team

@@ -1,5 +1,6 @@
 
 export default function FrontNine({playerScore}) {
+  console.log(playerScore, "playerScore FROM FRONT NINE");
     return (
       <>
         {playerScore.holeScore

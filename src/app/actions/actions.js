@@ -20,20 +20,20 @@ export const addScore = async (formData) => {
     const course = formData.get("course");
     const holeScore = Number(formData.get("holeScore")); // Ensure the score is a number
     const holeNumber = Number(formData.get("holeNumber")); // Ensure the hole number is a number
+
     const netScore = Number(formData.get("netScore"));
-    const handicap = Number(formData.get("handicap"));
+
+    // Calculate net score based on hole score and handicap
 
     console.log(
       course,
-      holeScore,
-      holeNumber,
-      netScore,
-      handicap,
-      "handicap",
-      "netScore",
       "course",
+      holeScore,
       "holeScore",
-      "holeNumber"
+      holeNumber,
+      "holeNumber",
+      netScore,
+      "netScore"
     );
 
     const player = await Player.findOne({ email: user.email });
@@ -63,9 +63,9 @@ export const addScore = async (formData) => {
             name: golfCourse.name,
             _id: golfCourse._id,
           },
-          holeScores: [{ hole: holeNumber, holeScore }],
-          totalScore: 0,
-          netScore,
+          holeScores: [{ hole: holeNumber, holeScore }], // Include netScore here
+          netScores: [{ hole: holeNumber, netScore }],
+          totalScore: holeScore,
           roundComplete: false,
           notes: formData.get("notes"),
           submitted: false,
@@ -81,21 +81,26 @@ export const addScore = async (formData) => {
           (hole) => hole.hole === holeNumber
         );
 
-        console.log("Current Hole Score", scoreSubmission.holeScores);
+        // console.log("Current Hole Score", scoreSubmission.holeScores);
 
         if (holeIndex !== -1) {
-          // If the hole already has a score, update it
+          // If the hole already has a score, update both holeScore and netScore
           scoreSubmission.holeScores[holeIndex].holeScore = holeScore;
-          console.log("Hole Score Updated", scoreSubmission.holeScores);
+          scoreSubmission.netScores[holeIndex].netScore = netScore; // This should be updated here
         } else {
           // Otherwise, push the new hole score
           scoreSubmission.holeScores.push({
             hole: holeNumber,
             holeScore,
           });
-          console.log("Hole Score Added", scoreSubmission.holeScores);
+          scoreSubmission.netScores.push({ hole: holeNumber, netScore });
         }
-        scoreSubmission.netScore = Math.max(holeScore - handicap, 0);
+
+        // Calculate total score from hole scores
+        scoreSubmission.totalScore = scoreSubmission.holeScores.reduce(
+          (acc, hole) => acc + hole.holeScore,
+          0
+        );
 
         // Save the updated score submission
         await scoreSubmission.save();
@@ -118,7 +123,10 @@ export const getHoleScore = async () => {
       console.log("Player not found");
       return { error: "Player not found" };
     }
-    const testScores = await TestScore.find({ player: player._id, "course.name": courseName, });
+    const testScores = await TestScore.find({
+      player: player._id,
+      "course.name": courseName,
+    });
 
     if (!testScores || testScores.length === 0) {
       return { error: "No scores found" };
@@ -127,9 +135,8 @@ export const getHoleScore = async () => {
     return testScores;
   } catch (error) {
     return { error: error.message };
-    
   }
-}
+};
 
 export const getPastResults = async () => {
   const rawFormData = {
@@ -167,10 +174,11 @@ export const updatePlayerProfile = async (formData) => {
   redirect("/");
 };
 
-export const updateScore = async (holeNumber, holeScore) => {
+export const updateScore = async (holeNumber, holeScore, netScore) => {
   const formData = new FormData();
   formData.append("holeNumber", holeNumber);
   formData.append("holeScore", holeScore);
+  formData.append("netScore", netScore);
 
   try {
     const response = await fetch("/api/updateScore", {
@@ -178,6 +186,7 @@ export const updateScore = async (holeNumber, holeScore) => {
       body: JSON.stringify({
         holeNumber,
         holeScore,
+        netScore,
       }),
       headers: {
         "Content-Type": "application/json",

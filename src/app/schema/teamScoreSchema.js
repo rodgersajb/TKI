@@ -14,12 +14,22 @@ const teamScoreSchema = new mongoose.Schema({
   playerScores: [
     {
       player: { type: mongoose.Schema.Types.ObjectId, ref: "Player" },
-      holeScore: [
+      holeScores: [
         {
           hole: { type: Number, required: true },
           holeScore: { type: Number, required: true },
         },
       ],
+      netScores: [
+        {
+          hole: { type: Number, required: true },
+          netScore: { type: Number, required: true },
+        },
+      ],
+      totalNetScore: {
+        type: Number,
+        required: true,
+      },
     },
   ],
   totalScore: {

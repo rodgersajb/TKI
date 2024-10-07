@@ -28,7 +28,7 @@ export default function Scorecard({ playerScore }) {
     currentScore = playerScore.holeScore.reduce((acc, scoreObj) => acc + scoreObj.holeScore, 0);
   }
 
-  
+  console.log(playerScore, "playerScore FROM SCORECARD");
 
   return (
     <main className="flex w-full">
