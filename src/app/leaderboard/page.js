@@ -20,7 +20,7 @@ export default async function Leaderboard() {
 
   const { getUser, isAuthenticated } = getKindeServerSession();
   const user = await getUser();
-  console.log(user, "user");
+  
 
   const playerScores = await TestScore.find();
   // console.log(playerScores, "playerScores");
@@ -40,14 +40,14 @@ export default async function Leaderboard() {
       teamPlayers.includes(score.player.toString())
     );
 
-    console.log(teamScores, "teamScores");
+    console.log(teamScores.course, "teamScores");
 
     // console.log(
     //   `Team ${team.teamId} has players with these scores:`,
     //   teamScores
     // );
 
-    const courseId = teamScores.course._id;
+    const courseId = teamScores[0].course._id;
     // console.log(courseId, "courseId");
 
     // total score for team on Six Foot Bay
@@ -85,7 +85,7 @@ export default async function Leaderboard() {
 
   let ranking = 0;
   const teamResults = await TeamScore.find().sort({ totalScore: 1 }).lean();
-  // console.log(teamResults, "teamResults");
+  console.log(teamResults, "teamResults");
 
   return (
     <main className=" w-full bg-kobeGrey">
